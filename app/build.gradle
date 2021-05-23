@@ -1,0 +1,64 @@
+plugins {
+    id 'com.android.application'
+}
+android {
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+}
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.1"
+    defaultConfig {
+        applicationId "com.cqut.market"
+        minSdkVersion 23
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    compile 'com.androidadvance:topsnackbar:0.0.8'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation files('libs/commons-beanutils.jar')
+    implementation files('libs/commons-collections-3.0.jar')
+    implementation files('libs/commons-lang-2.1.jar')
+    implementation files('libs/commons-logging.jar')
+    implementation files('libs/ezmorph-1.0.2.jar')
+    implementation files('libs/json-lib-1.1-jdk13.jar')
+    implementation files('libs/xom-1.0d10.jar')
+    implementation files('libs/mongo-java-driver-3.1.0.jar')
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+    testImplementation 'junit:junit:'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'org.litepal.android:java:3.0.0'
+    compile 'com.ashokvarma.android:bottom-navigation-bar:2.0.5'
+    implementation 'com.sun.mail:android-mail:1.5.5'
+    implementation 'com.sun.mail:android-activation:1.5.5'
+}

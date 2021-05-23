@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/phone"
+        android:title="打电话" />
+    <item
+        android:id="@+id/qq"
+        android:title="QQ联系" />
+    <item
+        android:id="@+id/qq_group"
+        android:title="一键加群" />
+    <item
+        android:id="@+id/weixin"
+        android:title="微信联系" />
+</menu>

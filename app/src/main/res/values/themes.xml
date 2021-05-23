@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.LiteMarket" parent="Theme.Design.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#FFAB00</item>
+        <item name="colorPrimaryVariant">#FFD600</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#AEEA00</item>
+        <item name="colorSecondaryVariant">#FFAB00</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="contextMenuAnim" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/dialog_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/dialog_exit_anim</item>
+    </style>
+
+</resources>

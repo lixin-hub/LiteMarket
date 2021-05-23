@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="取消订单"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/dialog_cancel_order_content"
+        android:textColor="@color/black"
+        android:textSize="15sp" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/dialog_cancel_order_des"
+        android:textSize="13sp" />
+
+    <RadioGroup
+        android:id="@+id/dialog_cancel_order_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/dialog_radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="点错了" />
+
+        <RadioButton
+            android:id="@+id/dialog_radio2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="质量堪忧" />
+
+        <RadioButton
+            android:id="@+id/dialog_radio3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="价格偏贵" />
+
+        <RadioButton
+            android:id="@+id/dialog_radio4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="就是不想要了但和产品无关" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="其他原因"
+        android:textSize="13sp" />
+
+    <EditText
+        android:id="@+id/dialog_cancel_order_edit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/message_input_background"
+        android:hint="顾客就是上帝"
+        android:paddingStart="10dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:background="@color/transparent"
+            android:id="@+id/dialog_cancel_order_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="联系我们"
+            android:textColor="@color/teal_700" />
+
+        <Button
+            android:background="@color/transparent"
+            android:id="@+id/dialog_cancel_order_think"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_toStartOf="@id/dialog_cancel_order_ok"
+            android:text="想一想"
+            android:textColor="@color/teal_700" />
+
+        <Button
+            android:background="@color/transparent"
+            android:id="@+id/dialog_cancel_order_ok"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:text="确定"
+            android:textColor="@color/teal_700" />
+    </RelativeLayout>
+
+</LinearLayout>

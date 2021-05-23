@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/main_layout_visibility"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNavigationBar_background">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/activity_main_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFAB00"
+                    android:fitsSystemWindows="true"
+                    app:layout_scrollFlags="scroll|enterAlways|snap">
+
+                    <include layout="@layout/activity_main_head" />
+
+                </androidx.appcompat.widget.Toolbar>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFAB00"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/main_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="2dp"
+                        android:background="@drawable/serach_background"
+                        android:hint="搜索"
+                        android:minWidth="150dp"
+                        android:paddingStart="10dp" />
+
+                    <Button
+                        android:id="@+id/order_by_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bt_paixu_background"
+                        android:text="价格" />
+
+                    <Button
+                        android:id="@+id/order_by_sales"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bt_paixu_background"
+                        android:text="销量" />
+
+                    <Button
+                        android:id="@+id/order_by_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bt_paixu_background"
+                        android:text="分类" />
+                </LinearLayout>
+
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/refresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/main_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/activity_main_bt_order_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="60dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/shop"
+            app:backgroundTint="#FFAB00"
+            app:fabCustomSize="60dp"
+            app:maxImageSize="70dp"
+            app:rippleColor="@color/transparent" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/main_layout_take_place"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/bottomNavigationBar_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="-2dp"
+        android:background="#FFA110">
+
+        <com.ashokvarma.bottomnavigation.BottomNavigationBar
+            android:id="@+id/bottomNavigationBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+
+</RelativeLayout>

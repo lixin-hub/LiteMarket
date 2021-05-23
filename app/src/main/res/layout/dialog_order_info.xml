@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dialog_info_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/bottom1"
+            android:layout_alignParentEnd="true"
+
+            />
+
+        <!--
+                <ImageView
+                    android:id="@+id/dialog_info_cancle"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/cancle"
+                    android:layout_above="@id/dialog_info_list"
+                    android:visibility="visible" />
+        -->
+        <LinearLayout
+            android:layout_above="@id/bottom1"
+            android:id="@+id/dialog_info_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shop_background"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_above="@id/bottom1"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                android:src="@drawable/shopcar" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="购物车空空如也"
+                android:textColor="#1B1A1A"
+                android:textSize="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="要是零食到手了就赶紧享用吧~"
+                android:textColor="#9e9b9b" />
+
+            <TextView
+                android:textSize="20dp"
+                android:id="@+id/dialog_order_info_look_look"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"
+                android:background="@color/transparent"
+                android:outlineProvider="background"
+                android:text="再看看"
+                android:textColor="#FFAB00" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/bottom1"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp">
+
+            <!-- <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_above="@id/dialog_info_bt_apply"
+                android:layout_marginBottom="5dp"
+                android:background="@color/black" />-->
+
+            <Button
+                android:id="@+id/dialog_order_info_clear_all"
+                android:visibility="gone"
+                android:layout_marginStart="20dp"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:text="清空"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bt_jieshuan_background"
+                 />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bt_jieshuan_background"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:layout_toStartOf="@id/dialog_info_text_total_money"
+                    android:gravity="center"
+                    android:text="总价格:"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/dialog_info_text_total_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="20dp"
+                    android:gravity="center"
+                    android:textColor="#DD2C00"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:id="@+id/dialog_info_bt_apply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/bt_apply_background"
+                    android:text="去结账" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

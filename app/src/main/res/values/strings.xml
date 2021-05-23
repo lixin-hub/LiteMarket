@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">悟净外卖</string>
+    <string name="login">登录</string>
+    <string name="dialog_cancel_order_content">当订单提交后在没有处理之前可以取消 \n您确定要取消订单吗? \n如果取消失败您可以尝试拨打电话联系我们！</string>
+    <string name="dialog_cancel_order_des">您为什么想要取消这个订单呢？\n反馈给我们以便于我们为您提供更好的服务</string>
+</resources>

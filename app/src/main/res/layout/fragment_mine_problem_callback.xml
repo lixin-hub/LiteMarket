@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E6EDF4"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/fragment_mine_problem_callback_back"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:text="问题反馈"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/fragment_mine_problem_callback_apply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="10dp"
+            android:text="提交"
+            android:textColor="#CD000000"
+            android:textSize="20dp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_margin="10dp"
+        android:text="问题和建议描述(最多100字)*"
+        android:textColor="#9F000000"
+        android:textSize="20dp" />
+
+    <EditText
+        android:maxEms="100"
+        android:gravity="start|top"
+        android:paddingStart="5dp"
+        android:background="@drawable/problem_background"
+        android:layout_margin="10dp"
+        android:id="@+id/fragment_mine_problem_callback_text"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:hint="请尽量详细的描述您遇到的问题，或者您的建议并附上手机型号，这有助于我们更快的发现和解决问题，提升您的体验"
+       />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="10dp"
+            android:text="图片材料(1张)"
+            android:textColor="#9F000000"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:id="@+id/fragment_mine_problem_callback_image"
+            android:src="@drawable/add1"
+            android:layout_margin="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="10dp"
+            android:text="联系方式"
+            android:textColor="#9F000000"
+            android:textSize="20dp" />
+
+        <EditText
+            android:paddingStart="5dp"
+            android:inputType="number"
+            android:background="@drawable/problem_background"
+            android:layout_margin="10dp"
+            android:id="@+id/fragment_mine_problem_callback_contact"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="输入您的联系方式"
+            />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:background="@color/white"
+        android:id="@+id/fragment_mine_receive_goods_info_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/fragment_mine_receive_goods_parent"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="确认收货信息"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <LinearLayout
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:text="备注："
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+
+            <EditText
+                android:textSize="13dp"
+                android:gravity="top|start"
+                android:hint=" 在这里统一备注"
+                android:id="@+id/fragment_mine_receive_goods_info_beizu"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#EFEFEE"
+                android:padding="3dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:text="地址："
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <EditText
+                    android:textSize="13dp"
+                    android:id="@+id/fragment_mine_receive_goods_info_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="top|start"
+                    android:background="#EFEFEE"
+                    android:hint="  门牌号例如：3栋1503"
+                    android:padding="3dp" />
+
+            </LinearLayout>
+            <CheckBox
+                android:checked="true"
+                android:id="@+id/fragment_mine_receive_goods_is_fetch_addr"
+                android:hint="   收货地址同步的云端"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:text="电话："
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+                <EditText
+                    android:textSize="13dp"
+                    android:id="@+id/fragment_mine_receive_goods_info_phoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#EFEFEE"
+                    android:hint="  便于送货人员联系"
+                    android:gravity="top|start"
+                    android:padding="3dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="2dp"
+                    android:gravity="center"
+                    android:text="  跑腿不易，老板打赏点运费吧！"
+                    android:textColor="@color/black" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/fragment_mine_receive_goods_info_checkbox_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="1元"
+                        android:textColorHint="#9E9D24" />
+
+                    <CheckBox
+                        android:id="@+id/fragment_mine_receive_goods_info_checkbox_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="2元"
+                        android:textColorHint="#F9A825" />
+
+                    <CheckBox
+                        android:id="@+id/fragment_mine_receive_goods_info_checkbox_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="3元"
+                        android:textColorHint="#EF6C00" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

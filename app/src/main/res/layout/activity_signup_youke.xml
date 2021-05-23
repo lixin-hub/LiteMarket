@@ -1,0 +1,97 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/activity_signup"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:text="免验证注册"
+                android:textSize="40sp" />
+
+            <EditText
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:id="@+id/signup_inout_userName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/login_input_background"
+                android:hint="输入你喜欢的帐号或用户名"
+                android:maxLength="20"
+                android:singleLine="true"
+                android:textColorHint="#b0bec5" />
+
+            <EditText
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:id="@+id/signup_inout_password"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:layout_weight="9"
+                android:background="@drawable/login_input_background"
+                android:hint="输入一个你能记住的密码"
+                android:inputType="textPassword"
+                android:maxLength="10"
+                android:singleLine="true"
+                android:textColorHint="#b0bec5" />
+
+            <EditText
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:background="@drawable/login_input_background"
+                android:id="@+id/signup_inout_password_again"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:layout_weight="9"
+                android:singleLine="true"
+                android:hint="再确认一次密码"
+                android:inputType="textPassword"
+                android:maxLength="10"
+                android:outlineAmbientShadowColor="#263238"
+                android:outlineSpotShadowColor="#b0bec5"
+                android:textColorHint="#b0bec5" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+            </LinearLayout>
+            <Button
+                android:id="@+id/signup_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:background="@drawable/bt_background"
+                android:text="注册"
+          />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

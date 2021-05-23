@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FBF8F8"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:id="@+id/fragment_mine_order_list_item_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="3dp"
+            android:text="LiteMarket"
+            android:textColor="@color/black"
+            android:textSize="13dp" />
+
+        <TextView
+            android:id="@+id/fragment_mine_order_list_item_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="8dp"
+            android:maxEms="14"
+
+            android:textColor="#EF6C00"
+            android:textSize="13dp" />
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_below="@id/fragment_mine_order_list_item_state"
+            android:layout_marginTop="4dp"
+            android:background="#EDEBEB" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/p_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_below="@+id/line1"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/transparent"
+            app:cardCornerRadius="10dp">
+
+            <ImageView
+                android:id="@+id/fragment_mine_order_list_item_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+               />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/fragment_mine_order_list_item_beizhu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/p_image"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            android:maxEms="14"
+            android:minHeight="30dp"
+            android:textColor="@color/black"
+            android:textSize="13dp" />
+
+        <EditText
+            android:id="@+id/fragment_mine_order_list_item_beizhu_input"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@id/p_image"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="100dp"
+            android:background="@drawable/comment_input_background"
+            android:hint="点击这里单独备注:"
+            android:maxEms="14"
+            android:paddingStart="10dp"
+            android:textColor="@color/black"
+            android:textSize="13dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/fragment_mine_order_list_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/p_image"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            android:layout_toEndOf="@id/p_image"
+            android:maxEms="14"
+            android:textColor="@color/black"
+            android:textSize="13dp" />
+
+        <TextView
+            android:id="@+id/fragment_mine_order_list_item_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/p_image"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@id/fragment_mine_order_list_item_name"
+            android:maxEms="14"
+            android:textColor="#8C8A8A"
+            android:textSize="13dp" />
+
+        <TextView
+            android:id="@+id/fragment_mine_order_list_item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/p_image"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toEndOf="@id/p_image"
+            android:maxEms="14"
+
+            android:textColor="#E68F8888"
+            android:textSize="13dp" />
+
+        <TextView
+            android:id="@+id/fragment_mine_order_list_item_price"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/p_image"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="5dp"
+            android:maxEms="14"
+
+            android:textColor="#F9A825"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/fragment_mine_order_list_item_transport_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fragment_mine_order_list_item_price"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="5dp"
+            android:maxEms="14"
+            android:textColor="@color/black"
+            android:textSize="13dp" />
+
+        <Button
+            android:id="@+id/fragment_mine_order_list_item_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fragment_mine_order_list_item_transport_price"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
+            android:text="取消订单"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/line2"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_below="@id/fragment_mine_order_list_item_beizhu"
+            android:layout_marginTop="8dp"
+            android:background="#EDEBEB" />
+
+        <TextView
+            android:id="@+id/p_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line2"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="5dp"
+            android:maxEms="14"
+            android:text="订单号："
+            android:textColor="@color/black"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/fragment_mine_order_list_item_ordercode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line2"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/p_text"
+            android:textColor="@color/black"
+            android:textSize="12dp" />
+    </RelativeLayout>
+
+
+</LinearLayout>

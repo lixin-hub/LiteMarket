@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fitsSystemWindows="true"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/white">
+        <ImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/fragment_mine_receive_goods_edit_info_back"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:src="@drawable/back" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="收货信息"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:gravity="center"
+                    android:text="收货地址*" />
+
+                <EditText
+                    android:id="@+id/fragment_mine_receive_edit_info_addr"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="9"
+                    android:background="@drawable/login_input_background"
+                    android:hint="输入收货地址"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textColorHint="#b0bec5" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_marginStart="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="联系电话*" />
+
+                <EditText
+                    android:id="@+id/fragment_mine_receive_edit_info_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:inputType="phone"
+                    android:background="@drawable/login_input_background"
+                    android:hint="输入联系电话"
+                    android:maxLength="11"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textColorHint="#b0bec5" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_marginStart="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text=" 联系QQ    " />
+
+                <EditText
+                    android:id="@+id/fragment_mine_receive_edit_info_qq"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/login_input_background"
+                    android:hint="输入联系QQ"
+                    android:inputType="number"
+                    android:maxLength="13"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textColorHint="#b0bec5" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_marginStart="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="邮箱地址  " />
+
+                <EditText
+                    android:id="@+id/fragment_mine_receive_edit_info_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/login_input_background"
+                    android:hint="输入邮箱地址"
+                    android:inputType="textEmailAddress"
+                    android:maxLength="18"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textColorHint="#b0bec5" />
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/fragment_mine_receive_goods_edit_info_remin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:gravity="center"
+            android:textColor="#D32F2F"
+             />
+
+        <Button
+            android:id="@+id/fragment_mine_receive_edit_info_apply"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="90dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="90dp"
+            android:text="提交"
+            android:textColor="#0097A7"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</LinearLayout>

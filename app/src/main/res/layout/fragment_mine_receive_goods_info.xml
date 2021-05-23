@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/fragment_mine_receive_goods_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_gravity="top"
+        android:background="@color/white">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/fragment_mine_receive_goods_back"
+                android:layout_width="30dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="订单列表"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@color/transparent" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_mine_receive_goods_info_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/fragment_mine_receive_goods_parent"
+        android:layout_below="@id/fragment_mine_receive_goods_toolbar"
+        android:layout_marginBottom="10dp" />
+
+
+    <LinearLayout
+        android:id="@+id/fragment_mine_receive_goods_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/bt_signup_background"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/fragment_mine_receive_goods_info_show_popwindow"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginStart="-2dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/edit" />
+
+        <TextView
+            android:id="@+id/fragment_mine_receive_goods_info_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            android:layout_weight="4"
+            android:gravity="end"
+            android:paddingEnd="10dp"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/fragment_mine_receive_goods_info_apply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:background="@drawable/bt_jieshuan_background"
+            android:enabled="true"
+            android:text="结算" />
+    </LinearLayout>
+
+</RelativeLayout>

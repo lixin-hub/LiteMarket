@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/white">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/fragment_mine_order_info_back"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="订单列表"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.cqut.market.view.CustomView.VPSwipeRefreshLayout
+        android:id="@+id/fragment_mine_order_list_view_page_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/fragment_order_list_pager_tab"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/fragment_order_list_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        </LinearLayout>
+    </com.cqut.market.view.CustomView.VPSwipeRefreshLayout>
+</LinearLayout>

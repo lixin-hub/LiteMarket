@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/join_us"
+        android:title="加入我们" />
+    <item
+        android:id="@+id/advice"
+        android:title="投诉建议" />
+</menu>

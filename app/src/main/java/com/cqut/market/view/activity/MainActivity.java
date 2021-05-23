@@ -2,6 +2,7 @@ package com.cqut.market.view.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -34,7 +35,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -43,6 +43,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
@@ -54,10 +55,12 @@ import com.cqut.market.R;
 import com.cqut.market.beans.Good;
 import com.cqut.market.beans.Order;
 import com.cqut.market.model.Constant;
+import com.cqut.market.model.GoodCategory;
 import com.cqut.market.model.MessageModel;
 import com.cqut.market.model.NetWorkUtil;
 import com.cqut.market.model.OrderState;
 import com.cqut.market.presenter.MainPresenter;
+import com.cqut.market.view.CustomView.FragmentStateAdapter;
 import com.cqut.market.view.CustomView.GoodListAdapter;
 import com.cqut.market.view.CustomView.Image3DSwitchView;
 import com.cqut.market.view.CustomView.Image3DView;
@@ -66,6 +69,8 @@ import com.cqut.market.view.CustomView.OrderListAdapter;
 import com.cqut.market.view.MainView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -80,20 +85,22 @@ import static com.ashokvarma.bottomnavigation.BottomNavigationBar.MODE_FIXED;
 
 public class MainActivity extends BaseActivity<MainView, MainPresenter> implements MainView, View.OnFocusChangeListener, BottomNavigationBar.OnTabSelectedListener, TextWatcher, SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
     private final ArrayList<Image3DView> images = new ArrayList<>();
-    private final ArrayList<Good> allGoods_back = new ArrayList<>();//备份
     private final ArrayList<Order> orders = new ArrayList<>();
-    private final List<GoodListAdapter.ViewHolder> viewHolders = new ArrayList<>();
+    private final ArrayList<Fragment> fragments = new ArrayList<>();
     public SharedPreferences sharedPreferences;
     public SharedPreferences.Editor editor;
+    ArrayList<String> strings = new ArrayList<>();
+    ArrayList<Good> currentGoods;
+    ArrayList<Good> 零食 = new ArrayList<>();
+    ArrayList<Good> 早餐 = new ArrayList<>();
+    ArrayList<Good> 日用 = new ArrayList<>();
+    ArrayList<Good> 快递 = new ArrayList<>();
+    ArrayList<Good> 酒饮 = new ArrayList<>();
+    ArrayList<Good> 速食 = new ArrayList<>();
     private ArrayList<String> orderedList;//加入购物车的商品
-    private ArrayList<Good> allGoods;
-    private ArrayList<Good> searchGoods;
-    private RecyclerView recyclerView;
-    private GoodListAdapter adapter;
+    private ArrayList<Good> allGoods = new ArrayList<>();
     private Button bt_oder_apply;
-    private int previewUI;//上一个界面
     private TextView text_total_money;
-    private CoordinatorLayout coordinatorLayout;
     private FloatingActionButton bt_order_info;
     private Image3DSwitchView image3DSwitchView;
     private final TimerTask headerImageTask = new TimerTask() {
@@ -102,10 +109,10 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
             runOnUiThread(() -> image3DSwitchView.scrollToNext());
         }
     };
+    private int tableIndex = 0;
     private OrderListAdapter orderListAdapter;
     private RecyclerView order_Info_list;
     private PopupWindow popupWindow;
-    private StaggeredGridLayoutManager gridLayoutManager;
     private SwipeRefreshLayout refreshLayout;
     private LinearLayout dialog_info_image_background;
     private Button bt_oderByPrice, bt_orderBySales;
@@ -122,9 +129,13 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     private ProgressDialog progressDialog_check_order_counts;
     private TextBadgeItem numberBadgeItem;
     private Button bt_clear_all_order;
-    private Button bt_order_by_type;
+    private ViewPager2 viewPager2;
+    private TabLayout tabLayout;
+    private FragmentStateAdapter goodsAdapter;
+    private TabLayoutMediator tabLayoutMediator;
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHideStatueBar();
@@ -142,8 +153,6 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         editor = sharedPreferences.edit();
         orderedList = new ArrayList<>();
         allGoods = new ArrayList<>();
-        searchGoods = new ArrayList<>();
-        recyclerView = findViewById(R.id.main_recycler);
         refreshLayout = findViewById(R.id.refresh);
         bt_order_info = findViewById(R.id.activity_main_bt_order_info);
         bt_order_info.setOnClickListener(this);
@@ -151,11 +160,6 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         refreshLayout.setOnRefreshListener(this);
         frameLayout_visibility = findViewById(R.id.main_layout_visibility);
         frameLayout_takePlace = findViewById(R.id.main_layout_take_place);
-        coordinatorLayout = findViewById(R.id.coordinator);
-        bt_order_by_type=findViewById(R.id.order_by_type);
-        bt_order_by_type.setOnClickListener(v -> {
-
-        });
         image3DSwitchView = findViewById(R.id.image_switch_view);
         images.add(findViewById(R.id.activity_main_head_3dswitch_1));
         images.add(findViewById(R.id.activity_main_head_3dswitch_2));
@@ -165,6 +169,9 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         ed_search_box = findViewById(R.id.main_search);
         ed_search_box.addTextChangedListener(this);
         ed_search_box.setOnFocusChangeListener(this);
+        ed_search_box.setOnClickListener(v -> {
+            clickAnimator(v);
+        });
         listenKeyboardVisible();
         bt_oderByPrice = findViewById(R.id.order_by_price);
         bt_orderBySales = findViewById(R.id.order_by_sales);
@@ -203,6 +210,93 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         //点击item
         numberBadgeItem.hide();
         bottomNavigationBar.setTabSelectedListener(this);
+        viewPager2 = findViewById(R.id.fragment_express_viewpager);
+        tabLayout = findViewById(R.id.fragment_express_tab);
+        currentGoods = allGoods;
+        strings.add("全部");
+        strings.add("零食");
+        strings.add("早餐");
+        strings.add("日用");
+        strings.add("快递");
+        strings.add("酒饮");
+        strings.add("速食");
+        tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
+            tab.setText(strings.get(position));
+        });
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tableIndex = tab.getPosition();
+                switch (tableIndex) {
+                    case 0:
+                        currentGoods = allGoods;
+                        break;
+                    case 1:
+                        currentGoods = 零食;
+                        break;
+                    case 2:
+                        currentGoods = 早餐;
+                        break;
+                    case 3:
+                        currentGoods = 日用;
+                        break;
+                    case 4:
+                        currentGoods = 快递;
+                        break;
+                    case 5:
+                        currentGoods = 酒饮;
+                        break;
+                    case 6:
+                        currentGoods = 速食;
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private List<Fragment> initCategory(ArrayList<Good> goods) {
+
+        for (Good good : goods) {
+            switch (Integer.parseInt(good.getCategory())) {
+                case GoodCategory.零食:
+                    零食.add(good);
+                    break;
+                case GoodCategory.快递:
+                    快递.add(good);
+                    break;
+                case GoodCategory.早餐:
+                    早餐.add(good);
+                    break;
+                case GoodCategory.速食:
+                    速食.add(good);
+                    break;
+                case GoodCategory.日用:
+                    日用.add(good);
+                    break;
+                case GoodCategory.酒饮:
+                    酒饮.add(good);
+                    break;
+                default:
+                    break;
+            }
+        }
+        fragments.add(new CategoryFragment(goods));
+        fragments.add(new CategoryFragment(零食));
+        fragments.add(new CategoryFragment(快递));
+        fragments.add(new CategoryFragment(早餐));
+        fragments.add(new CategoryFragment(速食));
+        fragments.add(new CategoryFragment(日用));
+        fragments.add(new CategoryFragment(酒饮));
+        return fragments;
     }
 
     @Override
@@ -247,50 +341,41 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     @Override
     public void onLoadPicture(Bitmap bitmap) {
         runOnUiThread(() -> {
-
         });
     }
 
     @Override
     public void onGoodsResponse(ArrayList<Good> goods) {
         String url = Constant.HOST + "image?imageName=";
-        allGoods = goods;
-        allGoods_back.clear();
-        allGoods_back.addAll(goods);
-        long time1 = sharedPreferences.getLong(Constant.LAST_GOOD_IMAGE_UPDATE_TIME, System.currentTimeMillis());
-        if (System.currentTimeMillis() - time1 > Constant.GOOD_IMAGE_UPDATE_TIME) {
-            new Thread(() -> Glide.get(MainActivity.this).clearDiskCache()).start();
-            editor = editor.putLong(Constant.LAST_GOOD_IMAGE_UPDATE_TIME, System.currentTimeMillis());
-            editor.apply();
-        }
+        allGoods.clear();
+        allGoods.addAll(goods);
         runOnUiThread(() -> {
-            Glide.get(MainActivity.this).clearMemory();
+            if (goodsAdapter == null) {
+                goodsAdapter = new FragmentStateAdapter(getSupportFragmentManager(), getLifecycle(), initCategory(allGoods));
+                viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
+                viewPager2.setAdapter(goodsAdapter);
+                tabLayoutMediator.attach();
+            } else {
+                ((CategoryFragment) fragments.get(tableIndex)).notifyData();
+            }
             if (refreshLayout.isRefreshing())
                 refreshLayout.setRefreshing(false);
-            adapter = new GoodListAdapter(this, goods);
-            gridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(gridLayoutManager);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-                viewHolders.clear();
-                for (String id : orderedList)
-                    addCardViewGood(id);
-            });
-            adapter.notifyDataSetChanged();
-            float offset = getWindowManager().getDefaultDisplay().getHeight() - bt_order_info.getY();
-            BottomOffsetDecoration bottomOffsetDecoration = new BottomOffsetDecoration((int) offset);
-            recyclerView.addItemDecoration(bottomOffsetDecoration);
-            adapter.setOnClickListener(MainActivity.this);
             int p = 0;
             for (Good g : goods) {
-                if (g != null && g.getCategory().contains("head") && p < 5) {
+                if (g != null && g.getCategory().equals("7") && p < 5) {
                     images.get(p).setTag(g.getId());
                     Glide.with(this).load(url + g.getImageName()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(images.get(p));
                     p++;
                 }
             }
         });
+
+        long time1 = sharedPreferences.getLong(Constant.LAST_GOOD_IMAGE_UPDATE_TIME, System.currentTimeMillis());
+        if (System.currentTimeMillis() - time1 > Constant.GOOD_IMAGE_UPDATE_TIME) {
+            new Thread(() -> Glide.get(MainActivity.this).clearDiskCache()).start();
+            editor = editor.putLong(Constant.LAST_GOOD_IMAGE_UPDATE_TIME, System.currentTimeMillis());
+            editor.apply();
+        }
     }
 
     @Override
@@ -422,25 +507,22 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 startActivityForResult(intent, Constant.REQUESTCODE_ORDER);
                 break;
             case R.id.goods_item_add:
+                clickAnimator(v);
                 goodHolder = (GoodListAdapter.ViewHolder) v.getTag();
                 String id = goodHolder.id;
                 addOrder(id);
-                goodHolder.cardView.setCardBackgroundColor(Color.parseColor("#FFAB00"));
-                viewHolders.add(goodHolder);
                 break;
             case R.id.goods_item_sub:
+                clickAnimator(v);
                 goodHolder = (GoodListAdapter.ViewHolder) v.getTag();
                 String goodid = goodHolder.id;
                 if (!orderedList.contains(goodid)) {
                     Snackbar.make(v, "还没有添加这个商品喲！", Snackbar.LENGTH_SHORT).show();
                     return;
                 }
-                adapter.holder.cardView.setCardBackgroundColor(Color.WHITE);
-                viewHolders.remove(goodHolder);
                 orderedList.remove(goodid);
                 orders.remove(findOrderByGoodId(goodid));
                 Snackbar.make(v, "移除成功", Snackbar.LENGTH_SHORT).show();
-                goodHolder.cardView.setCardBackgroundColor(Color.WHITE);
                 break;
             case R.id.activity_main_bt_order_info:
                 if (popupWindow == null || !popupWindow.isShowing()) {
@@ -451,10 +533,10 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 } else {
                     btAnimotor(100, 0);
                     popupAnimotor(0, -getWindowManager().getDefaultDisplay().getWidth(), true);
-
                 }
                 break;
             case R.id.order_info_item_add:
+                clickAnimator(v);
                 String id1 = ((String) v.getTag());
                 if (id1 == null) return;
                 Order order_add = findOrderByGoodId(id1);
@@ -464,8 +546,10 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                     orderListAdapter.notifyDataSetChanged();
                 }
                 text_total_money.setText(calculateMoney(orders) + "");
+
                 break;
             case R.id.order_info_item_sub:
+                clickAnimator(v);
                 String id2 = ((String) v.getTag());
                 if (id2 == null) return;
                 Order order_sub = findOrderByGoodId(id2);
@@ -477,7 +561,6 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                     orderListAdapter.notifyItemRemoved(orders.indexOf(order_sub));
                     orders.remove(order_sub);
                     orderedList.remove(id2);
-                    cancelCardViewGood(id2);
                 }
                 orderListAdapter.notifyDataSetChanged();
                 text_total_money.setText(calculateMoney(orders) + "");
@@ -487,10 +570,10 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 } else {
                     bt_clear_all_order.setVisibility(View.GONE);
                 }
+
                 break;
             case R.id.order_info_item_cancle:
                 String id3 = ((String) v.getTag());
-                cancelCardViewGood(id3);
                 dialog_info_image_background.setVisibility(View.GONE);
                 if (id3 == null) return;
                 Order order = findOrderByGoodId(id3);
@@ -507,9 +590,9 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 } else {
                     bt_clear_all_order.setVisibility(View.GONE);
                 }
-
                 break;
             case R.id.dialog_info_bt_apply:
+                clickAnimator(v);
                 if (checkOrderShouldApplyAble()) {
                     progressDialog_check_order_counts = MyDialog.getProgressDialog(this, "生成订单", "请稍候");
                     progressDialog_check_order_counts.show();
@@ -517,30 +600,27 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 }
                 break;
             case R.id.order_by_price:
+                clickAnimator(v);
                 popupWindowToPrice(v);
                 break;
             case R.id.order_by_sales:
+                clickAnimator(v);
                 popupWindowToSales(v);
                 break;
         }
     }
 
-    private void cancelCardViewGood(String id) {
-        for (int i = 0; i < viewHolders.size(); i++) {
-            if (id.equals(viewHolders.get(i).id)) {
-                viewHolders.get(i).cardView.setCardBackgroundColor(Color.WHITE);
-                viewHolders.remove(i);
-            }
-        }
+    public void clickAnimator(View v) {
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(v, "alpha", 1, 0, 1);
+        objectAnimator.setDuration(200);
+        objectAnimator.start();
+        ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(v, "translationY", 0, 50, 0);
+        objectAnimator1.setDuration(200);
+        objectAnimator1.start();
     }
 
     private void addCardViewGood(String id) {
-        for (int i = 0; i < adapter.allHolders.size(); i++) {
-            if (id.equals(adapter.allHolders.get(i).id)) {
-                viewHolders.add(adapter.allHolders.get(i));
-                adapter.allHolders.get(i).cardView.setCardBackgroundColor(Color.parseColor("#FFAB00"));
-            }
-        }
+
     }
 
     private boolean checkOrderShouldApplyAble() {
@@ -686,12 +766,8 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         View rootview = LayoutInflater.from(this).inflate(R.layout.activity_main, null);
         bt_clear_all_order = view.findViewById(R.id.dialog_order_info_clear_all);
         bt_clear_all_order.setOnClickListener((v) -> {
-            for (String id : orderedList) {
-                cancelCardViewGood(id);
-            }
             orders.clear();
             orderedList.clear();
-            viewHolders.clear();
             bt_clear_all_order.setVisibility(View.GONE);
             orderListAdapter.notifyDataSetChanged();
             text_total_money.setText(calculateMoney(orders) + "");
@@ -737,16 +813,18 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
 
 
     private void popupWindowToPrice(View parent) {
-        View view = LayoutInflater.from(this).inflate(R.layout.popup_paixu, null);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.popup_paixu, null);
         TextView text_up = view.findViewById(R.id.order_up);
         TextView text_down = view.findViewById(R.id.order_down);
         text_down.setOnClickListener(v -> {
-            Collections.sort(allGoods, (o1, o2) -> (int) (o2.getPrice() * 100 - o1.getPrice() * 100));
-            adapter.notifyItemRangeChanged(0, allGoods.size());
+            Collections.sort(currentGoods, (o1, o2) -> (int) (o2.getPrice() * 100 - o1.getPrice() * 100));
+            ((CategoryFragment) fragments.get(tableIndex)).notifyData();
+            clickAnimator(text_down);
         });
         text_up.setOnClickListener(v -> {
-            Collections.sort(allGoods, (o1, o2) -> (int) (o1.getPrice() * 100 - o2.getPrice() * 100));
-            adapter.notifyItemRangeChanged(0, allGoods.size());
+            Collections.sort(currentGoods, (o1, o2) -> (int) (o1.getPrice() * 100 - o2.getPrice() * 100));
+            ((CategoryFragment) fragments.get(tableIndex)).notifyData();
+            clickAnimator(text_up);
         });
         PopupWindow popupWindow = new PopupWindow(view);
         popupWindow.setWidth(150);
@@ -763,14 +841,18 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         TextView text_down = view.findViewById(R.id.order_down);
         text_down.setOnClickListener(v -> {
             if (allGoods.size() > 0) {
-                Collections.sort(allGoods, (o1, o2) -> o2.getSales() - o1.getSales());
-                adapter.notifyItemRangeChanged(0, allGoods.size());
+
+                Collections.sort(currentGoods, (o1, o2) -> o2.getSales() - o1.getSales());
+                ((CategoryFragment) fragments.get(tableIndex)).notifyData();
+                clickAnimator(text_down);
             }
         });
         text_up.setOnClickListener(v -> {
             if (allGoods.size() > 0) {
-                Collections.sort(allGoods, (o1, o2) -> o1.getSales() - o2.getSales());
-                adapter.notifyItemRangeChanged(0, allGoods.size());
+                Collections.sort(currentGoods, (o1, o2) -> o1.getSales() - o2.getSales());
+                goodsAdapter.notifyDataSetChanged();
+                ((CategoryFragment) fragments.get(tableIndex)).notifyData();
+                clickAnimator(text_up);
             }
         });
         PopupWindow popupWindow = new PopupWindow(view);
@@ -814,7 +896,6 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
             else {
                 orders.remove(findOrderByGoodId(id));
                 orderedList.remove(id);
-                cancelCardViewGood(id);
             }
         }
 
@@ -842,54 +923,10 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         }
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-//        searchGoods.clear();
-        for (Good good : allGoods_back) {
-            if (good.getDescription().contains(s) || good.getName().contains(s)) {
-                //searchGoods.add(good);
-                recyclerView.smoothScrollToPosition(allGoods.indexOf(good));
-            }
-        }
-//        refreshLayout.setEnabled(s.length() <= 0);
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-//        allGoods.clear();
-//        allGoods.addAll(searchGoods);
-//        if (adapter != null)
-//            adapter.notifyDataSetChanged();
-    }
-
-    private void refreshAllViewHolder() {
-        for (int i = 0; i < viewHolders.size(); i++) {
-            GoodListAdapter.ViewHolder holder = viewHolders.get(i);
-            cancelCardViewGood(holder.id);
-        }
-        for (String id : orderedList)
-            addCardViewGood(id);
-        adapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        refreshAllViewHolder();
-        if (hasFocus) {
-            gridLayoutManager.setSpanCount(1);
-        } else {
-            gridLayoutManager.setSpanCount(2);
-            ed_search_box.setText("");
-        }
-//        //searchBox
-//        allGoods.clear();
-//        allGoods.addAll(allGoods_back);
+
     }
 
     private void listenKeyboardVisible() {
@@ -914,10 +951,31 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                     ed_search_box.clearFocus();
                 } else {
                     ed_search_box.requestFocus();
+                    tabLayout.selectTab(tabLayout.getTabAt(0));
                 }
             }
 
         });
+
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        for (Good good : allGoods) {
+            if (good.getDescription().contains(s) || good.getName().contains(s)) {
+                int i = allGoods.indexOf(good);
+                ((CategoryFragment) fragments.get(tableIndex)).smoothScrollToPosition(i);
+            }
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
 
     }
 

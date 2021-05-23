@@ -3,6 +3,7 @@ package com.cqut.market.view.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -47,6 +48,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> implements OrderView, View.OnClickListener {
@@ -87,17 +89,19 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
     }
+
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.slide_right_in,R.anim.slide_right_out);
+        overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHideStatueBar();
         setContentView(R.layout.activity_order);
-        overridePendingTransition(R.anim.slide_left_in,R.anim.slide_left_out);
+        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
         dialog = MyDialog.getProgressDialog(this, "正在加载", "请稍候");
         dialog.show();
         Toolbar toolbar = findViewById(R.id.order_toolbar);
@@ -203,11 +207,11 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
                     bt_want.setBackgroundColor(Color.GRAY);
                     floatButton(getWindowManager().getDefaultDisplay().getWidth(), 0, v, 1);
                     TSnackbar snackbar = TSnackbar.make(findViewById(android.R.id.content), "已经添加到购物车了", TSnackbar.LENGTH_SHORT);
-                    snackbar.getView().setBackgroundColor(Color.parseColor("#FFA810"));
+                    snackbar.getView().setBackgroundColor(Color.parseColor("#0277BD"));
                     snackbar.getView().setRight(Gravity.RIGHT);
                     snackbar.show();
                 } else {
-                    bt_want.setBackgroundColor(Color.parseColor("#FFA810"));
+                    bt_want.setBackgroundColor(Color.parseColor("#0277BD"));
                     bt_want.setText("添加到购物车");
                     Snackbar.make(v, "移除成功", Snackbar.LENGTH_SHORT).show();
                     floatButton(getWindowManager().getDefaultDisplay().getWidth(), 0, v, -1);
@@ -275,16 +279,18 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
         });
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onGetGoodSuccess(Good good) {
         runOnUiThread(() -> {
             if (dialog != null) dialog.dismiss();
             order_description.setText(good.getDescription());
-            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             order_description_time.setText("上架时间:" + dateformat.format(new Date(good.getAddTime())));
             Glide.with(this).load(Constant.HOST + "image?imageName=" + good.getImageName()).into(image_good);
             collapsingToolbarLayout.setTitle(good.getName());
-
+            collapsingToolbarLayout.setExpandedTitleColor(Color.BLACK);
+            collapsingToolbarLayout.setContentScrimColor(Color.parseColor("#0277BD"));
         });
 
 
@@ -328,7 +334,7 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
             if (dir > 0)//100  0
                 view.setX(value);
             else //0  100
-                view.setX(start - value-view.getWidth());
+                view.setX(start - value - view.getWidth());
             view.invalidate();
         });
         animator.addListener(new AnimatorListenerAdapter() {

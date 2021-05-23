@@ -16,6 +16,7 @@ public class FragmentStateAdapter extends androidx.viewpager2.adapter.FragmentSt
         this.fragments= (ArrayList<Fragment>) fragments;
     }
 
+
     @NonNull
     @Override
     public Fragment createFragment(int position) {

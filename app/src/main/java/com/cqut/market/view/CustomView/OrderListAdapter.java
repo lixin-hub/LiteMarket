@@ -1,6 +1,5 @@
 package com.cqut.market.view.CustomView;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,24 +72,13 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
         holder.text_price.setText(price + "x" + count1 + "=" + result1);
         int count = order.getCount();
         holder.text_Order_count.setText(count + "");
-        Glide.with(context).load( Constant.HOST +"image?imageName=" + good.getImageName()).into(holder.image);
+        Glide.with(context).load(Constant.HOST + "image?imageName=" + good.getImageName()).into(holder.image);
 
     }
 
     @Override
     public int getItemCount() {
         return orders.size();
-    }
-
-    private void itemViewAnimotor(View itemView) {
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, -itemView.getWidth());
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                itemView.setX((Float) animation.getAnimatedValue());
-            }
-        });
-        valueAnimator.start();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

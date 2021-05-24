@@ -44,16 +44,14 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             view = convertView;
             holder = (ViewHolder) view.getTag();
         }
+        holder.content.setStartColor(Color.parseColor("#FF0052"));
+        holder.content.setEndColor(Color.parseColor("#802F7B"));
+        holder.content.setSpeed(400);
+        holder.content.setFlash(false);
         if (comment == null) {
-            holder.content.setStartColor(0xFF00B8D4);
-            holder.content.setEndColor(0xFFFF00D5);
             holder.content.setText("献上你的评论吧!");
             return view;
         }
-        holder.content.setSpeed(400);
-        holder.content.setFlash(true);
-        holder.content.setStartColor(0xFF00B8D4);
-        holder.content.setEndColor(0xFFFF00D5);
         holder.content.setText(comment.getContent());
         holder.userName.setText(comment.getUserName());
         Date date = new Date(Long.parseLong(comment.getTime()));

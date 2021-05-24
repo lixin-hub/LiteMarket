@@ -39,6 +39,7 @@ public class Constant {
     public static final String SEND_MESSAGE_FAILED = "-1700";
     public static final String SEND_MESSAGE_SUCCESS = "-1800";
     public static final String MESSAGE_NONE = "-1900";//没有消息
+    public static final String VIBRATORABLE = "vibrateable";//允许震动
     public static List<Order> orders = new ArrayList<>();//缓存
     public static User user;//缓存
     public static String MY_MARKET_NAME = "MY_MARKET";//本地数据表名称
@@ -55,7 +56,7 @@ public class Constant {
     public static long INVALID_TIME = 1000 * 60 * 60 * 24 * 1;//三天登录失效
     public static String LAST_GOOD_IMAGE_UPDATE_TIME = "imageUpdateTime";//一天
     public static final String NEW_MESSAGE_COUNT = "countOfNewMessage";
-    public static long GOOD_IMAGE_UPDATE_TIME = 1000 * 60 * 5;//一分钟
+    public static long GOOD_IMAGE_UPDATE_TIME = 1000 * 60 * 60*24;//一分钟
     public static String CONNECT_FAILED = "100";//
     public static String USER_EXISTED = "-100";//
     public static String LOGIN_SUCCESS = "-200";

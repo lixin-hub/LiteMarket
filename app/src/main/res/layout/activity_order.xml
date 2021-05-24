@@ -52,11 +52,20 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <ImageView
+                    app:layout_anchor="@id/appbar"
+                    android:layout_gravity="end|bottom"
+                    android:id="@+id/order_want"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/shop_add"
+                   />
+
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="15dp"
-                    android:layout_marginTop="35dp"
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="15dp"
                     app:cardCornerRadius="4dp">
@@ -67,6 +76,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:textColor="@color/black"
                             android:id="@+id/order_description"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -97,18 +107,6 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-
-        <Button
-            android:id="@+id/order_want"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#0277BD"
-            android:layout_marginEnd="16dp"
-            android:text="添加到购物车"
-            android:gravity="center"
-            android:layout_gravity="bottom"
-            app:layout_anchor="@id/appbar"
-            app:layout_anchorGravity="bottom|end" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/order_comment_button"

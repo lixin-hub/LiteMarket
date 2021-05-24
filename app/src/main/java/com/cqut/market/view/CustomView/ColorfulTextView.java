@@ -54,7 +54,7 @@ public class ColorfulTextView extends AppCompatTextView {
                         0,//渐变起始点x坐标
                         0,//渐变起始点y坐标
                         mViewWidth,//渐变结束点x点坐标
-                        0,//渐变结束点y坐标
+                        getMeasuredHeight(),//渐变结束点y坐标
                         new int[]{
                                 startColor,endColor},//颜色的int数组
                         null,//相对位置的颜色数组,可为null, 若为null,可为null,颜色沿渐变线均匀分布

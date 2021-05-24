@@ -23,9 +23,11 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="3dp"
                 android:text="快乐星球"
-                android:textColor="@color/teal_700" />
+                android:textColor="#0277BD" />
 
             <com.cqut.market.view.CustomView.ColorfulTextView
+                android:textStyle="bold"
+                android:textSize="15sp"
                 android:id="@+id/comment_item_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,7 +44,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="3dp"
-                android:textColor="#FFD740" />
+                android:textColor="#646D73" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

@@ -5,6 +5,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -29,6 +31,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +54,7 @@ import com.cqut.market.model.FileUtil;
 import com.cqut.market.model.LoginModel;
 import com.cqut.market.model.NetWorkUtil;
 import com.cqut.market.model.UpdateApp;
+import com.cqut.market.model.Util;
 import com.cqut.market.presenter.MineItemPresenter;
 import com.cqut.market.view.CustomView.ApplyOrderListAdapter;
 import com.cqut.market.view.CustomView.FragmentStateAdapter;
@@ -196,14 +200,14 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
 
         }
         timer.schedule(task, 100);
-        overridePendingTransition(R.anim.slide_left_in,R.anim.slide_left_out);
+        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
 
     }
 
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.slide_right_in,R.anim.slide_right_out);
+        overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
     }
 
     private void openWebTo(WebView webView, String url) {
@@ -267,7 +271,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         EditText ed_nickname = view.findViewById(R.id.fragment_mine_set_nickame);
         bt_nick_apply.setOnClickListener(v -> {
             String nick = ed_nickname.getText().toString();
-            if (nick == null || nick.equals("")) {
+            if (nick.equals("")) {
                 MyDialog.showToast(this, "内容不能为空");
                 return;
             }
@@ -293,6 +297,14 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         View re_set_nickname = findViewById(R.id.fragment_mine_user_info_set_nickname);
         View re_set_head_image = findViewById(R.id.fragment_mine_user_info_set_head_image);
         View bt_login_out = findViewById(R.id.fragment_mine_user_info_login_out);
+        findViewById(R.id.fragment_mine_user_info_back).setOnClickListener(v -> finish());
+        Switch switch1 = findViewById(R.id.fragment_mine_switch_vibrate);
+        boolean vs = sharedPreferences.getBoolean(Constant.VIBRATORABLE, true);
+        switch1.setChecked(vs);
+        switch1.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            editor.putBoolean(Constant.VIBRATORABLE, isChecked);
+            editor.apply();
+        });
         bt_login_out.setOnClickListener(v -> {
             AlertDialog.Builder loginOutBulider = MyDialog.getDialog(this, "退出登录", "确定要退出登录吗?");
             loginOutBulider.setPositiveButton("确定", (dialog, which) -> {
@@ -417,28 +429,34 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
             String email = ed_email.getText().toString();
             String phone = ed_phone.getText().toString();
             String qq = ed_qq.getText().toString();
-            if (addr != null && !addr.equals("") && phone != null && LoginModel.isMobileNumber(phone)) {
-                editor.putString(Constant.ADDR, addr);
-                editor.putString(Constant.EMAIL, email);
-                editor.putString(Constant.PHONE_NUMBER, phone);
-                editor.putString(Constant.QQ_NUMBER, qq);
-                editor.apply();
-                User user = new User();
-                user.setId(userId);
-                user.setAddr(addr);
-                user.setEmail(email);
-                user.setPhoneNumber(phone);
-                user.setQqNumber(qq);
-                editor.putString(Constant.PHONE_NUMBER, phone);
-                editor.apply();
-                uploadReceiveGoodDialog = MyDialog.getProgressDialog(this, "正在上传", "请稍候...");
-                uploadReceiveGoodDialog.show();
-                getPresenter().uploadUserInfo(user, this);
-            } else {
-                text_remin.setText("带*的必需填写喲");
+            if (addr.equals("")||addr.length()<4) {
+                text_remin.setText("地址至少4个字");
+                Util.clickAnimator(ed_addr);
+                return;
             }
-        });
-    }
+            if (!LoginModel.isMobileNumber(phone)) {
+                text_remin.setText("手机号码可能不对喲！");
+                Util.clickAnimator(ed_phone);
+                return;
+            }
+            editor.putString(Constant.ADDR, addr);
+            editor.putString(Constant.EMAIL, email);
+            editor.putString(Constant.PHONE_NUMBER, phone);
+            editor.putString(Constant.QQ_NUMBER, qq);
+            editor.apply();
+            User user = new User();
+            user.setId(userId);
+            user.setAddr(addr);
+            user.setEmail(email);
+            user.setPhoneNumber(phone);
+            user.setQqNumber(qq);
+            editor.putString(Constant.PHONE_NUMBER, phone);
+            editor.apply();
+            uploadReceiveGoodDialog = MyDialog.getProgressDialog(this, "正在上传", "请稍候...");
+            uploadReceiveGoodDialog.show();
+            getPresenter().uploadUserInfo(user, this);
+    });
+}
 
     private void showPopAnimator(int type) {
         image_show_order_pop.setVisibility(View.VISIBLE);
@@ -518,7 +536,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         checkBox_2 = view_dialog.findViewById(R.id.fragment_mine_receive_goods_info_checkbox_2);
         checkBox_3 = view_dialog.findViewById(R.id.fragment_mine_receive_goods_info_checkbox_3);
         isFetchAddr = view_dialog.findViewById(R.id.fragment_mine_receive_goods_is_fetch_addr);
-        checkBox_2.setChecked(true);
+        checkBox_1.setChecked(true);
         Button bt_order_apply = findViewById(R.id.fragment_mine_receive_goods_info_apply);
         bt_order_apply.setEnabled(true);
         text_price = findViewById(R.id.fragment_mine_receive_goods_info_price);
@@ -527,12 +545,17 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         ed_phone_number = view_dialog.findViewById(R.id.fragment_mine_receive_goods_info_phoneNumber);
         ed_addr.setText(sharedPreferences.getString(Constant.ADDR, ""));
         ed_phone_number.setText(sharedPreferences.getString(Constant.PHONE_NUMBER, ""));
+        ed_addr.setOnClickListener(Util::clickAnimator);
+        ed_phone_number.setOnClickListener(Util::clickAnimator);
+        ed_beizhu.setOnClickListener(Util::clickAnimator);
+        isFetchAddr.setOnClickListener(Util::clickAnimator);
         ApplyOrderListAdapter applyOrderListAdapter = new ApplyOrderListAdapter(this, orders);
         image_show_order_pop.setOnClickListener(v -> {
             showDialogReceiveInfo();
         });
         image_back.setOnClickListener(v -> finish());
         checkBox_1.setOnClickListener(v -> {
+            Util.clickAnimator(v);
             checkBox_1.setChecked(true);
             checkBox_2.setChecked(false);
             checkBox_3.setChecked(false);
@@ -540,6 +563,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
             text_price.setText("配送费:" + transport_fee + "\nRMB:" + (calculateMoney(orders) + transport_fee));
         });
         checkBox_2.setOnClickListener(v -> {
+            Util.clickAnimator(v);
             checkBox_2.setChecked(true);
             checkBox_1.setChecked(!checkBox_2.isChecked());
             checkBox_3.setChecked(false);
@@ -547,6 +571,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
             text_price.setText("配送费:" + transport_fee + "\nRMB:" + (calculateMoney(orders) + transport_fee));
         });
         checkBox_3.setOnClickListener(v -> {
+            Util.clickAnimator(v);
             checkBox_2.setChecked(false);
             checkBox_3.setChecked(!checkBox_2.isChecked());
             checkBox_1.setChecked(!checkBox_3.isChecked());
@@ -555,6 +580,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         });
 
         bt_order_apply.setOnClickListener(v -> {
+            Util.clickAnimator(v);
             if (popupWindow_recive_good != null)
                 popupWindow_recive_good.close();
             String addr = ed_addr.getText().toString();
@@ -721,14 +747,17 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
                     }
                 });
                 builder.setNegativeButton("查看订单", (dialog, which) -> {
-                    Intent intent=new Intent(this,ShowMineItemActivity.class);
-                    intent.putExtra(Constant.USER_ID,userId);
-                    intent.putExtra("item",Constant.MINE_ORDER);
+                    Intent intent = new Intent(this, ShowMineItemActivity.class);
+                    intent.putExtra(Constant.USER_ID, userId);
+                    intent.putExtra("item", Constant.MINE_ORDER);
                     startActivity(intent);
                     finish();
                 });
                 AlertDialog mdialog = builder.create();
                 mdialog.show();
+                NotificationManager notificationManger = Util.createNotificationManger(this, "order", "下单通知", NotificationManager.IMPORTANCE_MAX);
+                Notification notification = Util.createNotification(this, "下单成功", message, "order");
+                notificationManger.notify(1, notification);
             }
             if (applyOrderDialog != null && applyOrderDialog.isShowing())
                 applyOrderDialog.dismiss();

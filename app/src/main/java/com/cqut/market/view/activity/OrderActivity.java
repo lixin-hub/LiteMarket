@@ -36,6 +36,7 @@ import com.cqut.market.R;
 import com.cqut.market.beans.Comment;
 import com.cqut.market.beans.Good;
 import com.cqut.market.model.Constant;
+import com.cqut.market.model.Util;
 import com.cqut.market.presenter.OrderPresenter;
 import com.cqut.market.view.CustomView.CommentListAdapter;
 import com.cqut.market.view.CustomView.MyDialog;
@@ -50,6 +51,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> implements OrderView, View.OnClickListener {
 
@@ -67,7 +70,7 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private PopupWindow popupWindow;
     private ProgressDialog dialog;
-    private Button bt_want;
+    private ImageView bt_want;
     private boolean isSelected = false;
     private boolean isSelectedBefore = false;
     private Comment newComment;//新提交的评论
@@ -128,7 +131,6 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
         commentArrayAdapter = new CommentListAdapter(this, R.layout.comments_item, comments);
         commentList.setAdapter(commentArrayAdapter);
     }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -154,6 +156,7 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
         return this;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -193,9 +196,9 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
                 }
                 break;
             case R.id.order_want:
+                Util.clickAnimator(v);
                 if (isSelectedBefore) {
-                    bt_want.setText("取消添加");
-                    bt_want.setBackgroundColor(Color.GRAY);
+//                    bt_want.setBackgroundColor(Color.GRAY);
                     floatButton(getWindowManager().getDefaultDisplay().getWidth(), 0, v, 1);//向左
                     isSelectedBefore = false;
                     isSelected = true;
@@ -203,16 +206,14 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
                 }
                 isSelected = !isSelected;
                 if (isSelected) {
-                    bt_want.setText("取消添加");
-                    bt_want.setBackgroundColor(Color.GRAY);
+//                    bt_want.setBackgroundColor(Color.GRAY);
                     floatButton(getWindowManager().getDefaultDisplay().getWidth(), 0, v, 1);
-                    TSnackbar snackbar = TSnackbar.make(findViewById(android.R.id.content), "已经添加到购物车了", TSnackbar.LENGTH_SHORT);
+                    TSnackbar snackbar = TSnackbar.make(collapsingToolbarLayout, "已经添加到购物车了", TSnackbar.LENGTH_SHORT);
                     snackbar.getView().setBackgroundColor(Color.parseColor("#0277BD"));
                     snackbar.getView().setRight(Gravity.RIGHT);
                     snackbar.show();
                 } else {
-                    bt_want.setBackgroundColor(Color.parseColor("#0277BD"));
-                    bt_want.setText("添加到购物车");
+//                    bt_want.setBackgroundColor(Color.parseColor("#0277BD"));
                     Snackbar.make(v, "移除成功", Snackbar.LENGTH_SHORT).show();
                     floatButton(getWindowManager().getDefaultDisplay().getWidth(), 0, v, -1);
                 }
@@ -289,7 +290,6 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
             order_description_time.setText("上架时间:" + dateformat.format(new Date(good.getAddTime())));
             Glide.with(this).load(Constant.HOST + "image?imageName=" + good.getImageName()).into(image_good);
             collapsingToolbarLayout.setTitle(good.getName());
-            collapsingToolbarLayout.setExpandedTitleColor(Color.BLACK);
             collapsingToolbarLayout.setContentScrimColor(Color.parseColor("#0277BD"));
         });
 

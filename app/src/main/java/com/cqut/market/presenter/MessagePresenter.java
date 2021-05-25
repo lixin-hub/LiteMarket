@@ -3,10 +3,6 @@ package com.cqut.market.presenter;
 import com.cqut.market.beans.Message;
 import com.cqut.market.model.MessageModel;
 import com.cqut.market.view.MessageView;
-import com.cqut.market.view.activity.MessageActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MessagePresenter extends BasePresenter<MessageView> {
     private MessageModel messageModel;
@@ -21,4 +17,13 @@ public class MessagePresenter extends BasePresenter<MessageView> {
         messageModel.getNewMessage(size, userId, messageView);
     }
 
+    public void clearAllMessage(String userId, MessageView messageView) {
+        messageModel = new MessageModel();
+        messageModel.clearAllMessage(userId, messageView);
+    }
+
+    public void clearMessage(String id,MessageView messageView) {
+        messageModel = new MessageModel();
+        messageModel.clearMessage(id, messageView);
+    }
 }

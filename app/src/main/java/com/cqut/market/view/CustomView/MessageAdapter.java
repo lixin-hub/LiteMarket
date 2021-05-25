@@ -33,7 +33,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         this.messages.addAll(messages);
         Collections.sort(messages, (o1, o2) -> (int) (o1.getDate() - o2.getDate()));
     }
-
     public void myNotifyDataSetChanged(List<Message> messages) {
         this.messages.clear();
         this.messages.addAll(messages);

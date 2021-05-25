@@ -8,4 +8,5 @@ public interface MessageView extends BaseView{
 
     void onMessageResult(List<Message> messages);
     void onSendMessageResult(String message);
+    void onClear(String result);
 }

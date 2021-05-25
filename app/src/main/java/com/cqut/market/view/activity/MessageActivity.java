@@ -16,6 +16,9 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -39,9 +42,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cqut.market.R;
 import com.cqut.market.beans.Message;
 import com.cqut.market.model.Constant;
+import com.cqut.market.model.FileUtil;
 import com.cqut.market.presenter.MessagePresenter;
 import com.cqut.market.view.CustomView.MessageAdapter;
 import com.cqut.market.view.CustomView.MyDialog;
+import com.cqut.market.view.CustomView.RecyclerViewWithContextMenu;
 import com.cqut.market.view.MessageView;
 
 import java.util.ArrayList;
@@ -61,7 +66,8 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
     private String headImagePath;
     private EditText ed_content;
     private ProgressDialog progressDialog;
-    private TextView contact_us, about,new_activity;
+    private TextView contact_us, about, new_activity;
+    private RecyclerViewWithContextMenu.RecyclerViewContextInfo contextMenuInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,11 +91,12 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
             keybord_image = findViewById(R.id.activity_message_go_to_keybord);
             more_visibility = findViewById(R.id.activity_message_navigation_more_visibility);
             messageRecycler = findViewById(R.id.message_recycler);
+            messageRecycler.setLongClickable(true);
             bt_send = findViewById(R.id.message_bt_send);
             ed_content = findViewById(R.id.message_input);
             contact_us = findViewById(R.id.activity_message_more_contact_us);
             about = findViewById(R.id.activity_message_navigation_about);
-            new_activity=findViewById(R.id.activity_message_navigation_new_activity);
+            new_activity = findViewById(R.id.activity_message_navigation_new_activity);
             findViewById(R.id.activity_message_back).setOnClickListener((v) -> finish());
             messageAdapter = new MessageAdapter(this, messageQueue);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -101,6 +108,10 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
             messageRecycler.setAdapter(messageAdapter);
             progressDialog = MyDialog.getProgressDialog(this, "Loading", "我在玩命加载啦~");
             progressDialog.show();
+            messageRecycler.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+                contextMenuInfo = (RecyclerViewWithContextMenu.RecyclerViewContextInfo) menuInfo;
+                menu.add(0, 1, 1, "删除");
+            });
             more_image.setOnClickListener((v) -> {
                 if (ed_content.hasFocus()) {
                     showKeyboard(false);
@@ -128,7 +139,8 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
                         .build();
                 getPresenter().sendMessage(message, this);
                 ed_content.setText("");
-                messageRecycler.smoothScrollToPosition(messageQueue.size() - 1);
+                if (messageQueue != null && messageQueue.size() > 1)
+                    messageRecycler.smoothScrollToPosition(messageQueue.size() - 1);
             });
             contact_us.setOnClickListener((v) -> {
                 showContactPopMenu(v);
@@ -137,7 +149,7 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
                 showAboutPopMenu(v);
             });
             new_activity.setOnClickListener((v -> {
-                getPresenter().requestMessage(Constant.GET_MESSAGE_NEW_ACTIVITY,userId,this);
+                getPresenter().requestMessage(Constant.GET_MESSAGE_NEW_ACTIVITY, userId, this);
             }));
         }//init
         getPresenter().requestMessage(Constant.GET_MESSAGE_NEW, userId, this);
@@ -187,6 +199,35 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
             return false;
         });
         popupMenu.show();
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == 1) {
+            if (contextMenuInfo != null && contextMenuInfo.getPosition() > 0) {
+                Message message = messageQueue.get(contextMenuInfo.getPosition());
+                if (message != null)
+                    getPresenter().clearMessage(message.getId(), this);
+            }
+        }
+        return super.onContextItemSelected(item);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.message_menue, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.message_menu_refresh:
+                getPresenter().requestMessage(Constant.GET_MESSAGE_NEW, userId, this);//获取新消息
+                break;
+            case R.id.message_menu_clear:
+                getPresenter().clearAllMessage(userId, this);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showContactPopMenu(View view) {
@@ -326,6 +367,16 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
                 MyDialog.showToast(this, message);
             if (message.equals(Constant.SEND_MESSAGE_SUCCESS))
                 getPresenter().requestMessage(Constant.GET_MESSAGE_NEW, userId, this);//获取前几条消息
+        });
+    }
+
+    @Override
+    public void onClear(String result) {
+        runOnUiThread(() -> {
+            FileUtil.saveData("", "message");
+            messageQueue.clear();
+            getPresenter().requestMessage(Constant.GET_MESSAGE_NEW, userId, this);//获取新消息
+            MyDialog.showToast(this, result);
         });
     }
 

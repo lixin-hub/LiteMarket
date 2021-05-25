@@ -99,7 +99,7 @@ public class MessageModel {
         NetWorkUtil.sendRequestAddParms(url, "Message", jsonSt, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                if (Constant.NETWORK_INFO)
+                if (!Constant.NETWORK_INFO)
                     messageView.onSendMessageResult("网络不可用");
                 else messageView.onSendMessageResult(Constant.SEND_MESSAGE_FAILED);
             }
@@ -111,6 +111,43 @@ public class MessageModel {
                 if (responseCode != null && responseCode.equals(Constant.SEND_MESSAGE_SUCCESS))
                     messageView.onSendMessageResult(Constant.SEND_MESSAGE_SUCCESS);
                 else messageView.onSendMessageResult(Constant.SEND_MESSAGE_FAILED);
+            }
+        });
+    }
+
+    public void clearMessage(String messageId, MessageView messageView) {
+        NetWorkUtil.sendRequestAddParms(url, "clearMessage", messageId, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                messageView.onClear("失败" + e.getCause());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String string = response.body().string();
+                String responseCode = JsonUtil.getResponseCode(string);
+                if (responseCode != null && responseCode.equals(Constant.CLEAR_MESSAGE_SUCCESS))
+                    messageView.onClear("所有消息删除成功");
+                else
+                    messageView.onClear("失败");
+            }
+        });
+    }
+    public void clearAllMessage(String userId, MessageView messageView) {
+        NetWorkUtil.sendRequestAddParms(url, "clearAllMessage", userId, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                messageView.onClear("失败" + e.getCause());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String string = response.body().string();
+                String responseCode = JsonUtil.getResponseCode(string);
+                if (responseCode != null && responseCode.equals(Constant.CLEAR_MESSAGE_SUCCESS))
+                    messageView.onClear("消息删除成功");
+                else
+                    messageView.onClear("失败");
             }
         });
     }

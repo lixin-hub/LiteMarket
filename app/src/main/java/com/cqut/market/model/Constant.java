@@ -70,8 +70,10 @@ public class Constant {
     public static String ORDER_APPLY_SUCCESS = "-1000";
     public static String ORDER_APPLY_FAILED = "-1100";
     public static String UPDATE_SUCCESS = "-1200";
-    public static final String ORDER_CANCEL_SUCCESS ="-2100";
     public static final String ORDER_CANCEL_FAILED = "-2000";
+    public static final String ORDER_CANCEL_SUCCESS ="-2100";
+    public static final String CLEAR_MESSAGE_SUCCESS = "2200";
+
     public static String EXTERNAL_STORAGE;
     public static int ANIMATOR_IN = 1;
     public static int ANIMATOR_OUT = 0;

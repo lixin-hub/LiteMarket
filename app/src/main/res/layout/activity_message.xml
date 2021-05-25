@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:longClickable="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#C4D1D5"
@@ -34,6 +35,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:longClickable="true"
         android:id="@+id/message_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

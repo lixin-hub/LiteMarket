@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
+    android:longClickable="true"
     android:orientation="vertical">
 
     <TextView

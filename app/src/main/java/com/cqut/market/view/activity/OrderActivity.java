@@ -51,8 +51,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> implements OrderView, View.OnClickListener {
 
@@ -130,7 +128,9 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
         comments = new ArrayList<>();
         commentArrayAdapter = new CommentListAdapter(this, R.layout.comments_item, comments);
         commentList.setAdapter(commentArrayAdapter);
+        commentArrayAdapter.setListener(this);
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -218,8 +218,31 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
                     floatButton(getWindowManager().getDefaultDisplay().getWidth(), 0, v, -1);
                 }
                 break;
-
+            case R.id.comments_likes:
+                for (Comment c : comments) {
+                    if (c == null) {
+                        comments.remove(c);
+                    }
+                }
+                Util.clickAnimator(v);
+                String id = (String) v.getTag();
+                Comment comm = findCommentById(id);
+                if (comm != null) comm.setLikes(comm.getLikes() + 1);
+                getPresenter().applyLikes(id, this, v);
         }
+    }
+
+    private void sortComments() {
+        Collections.sort(comments, (o1, o2) -> (int) (Long.parseLong(o1.getTime()) - Long.parseLong(o2.getTime())));
+        Collections.sort(comments, (o1, o2) -> o2.getLikes() - o1.getLikes());
+    }
+
+    private Comment findCommentById(String id) {
+        for (Comment comment : comments) {
+            if (comment.getCommentId().equals(id))
+                return comment;
+        }
+        return null;
     }
 
     private int getStateBarHeight() {
@@ -263,9 +286,9 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
     public void onGetCommentsSuccess(ArrayList<Comment> comments) {
         this.comments.clear();
         this.comments.addAll(comments);
+        sortComments();
         runOnUiThread(() -> {
             if (dialog != null) dialog.dismiss();
-            Collections.reverse(this.comments);
             commentArrayAdapter.notifyDataSetChanged();
             setListViewHeightBasedOnChildren(commentList);
         });
@@ -276,7 +299,6 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
         runOnUiThread(() -> {
             Toast.makeText(OrderActivity.this, message, Toast.LENGTH_SHORT).show();
             if (dialog != null) dialog.dismiss();
-
         });
     }
 
@@ -299,7 +321,18 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
     @Override
     public void onGetGoodFailed(String message) {
         runOnUiThread(() -> Toast.makeText(OrderActivity.this, message, Toast.LENGTH_SHORT).show());
+    }
 
+    @Override
+    public void onLikesSuccess(String message, View view) {
+        runOnUiThread(() -> {
+            if (!message.equals(Constant.LIKES_SUCCESS)) {
+                Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+            } else {
+                sortComments();
+                commentArrayAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public void popupToComment(View parent) {

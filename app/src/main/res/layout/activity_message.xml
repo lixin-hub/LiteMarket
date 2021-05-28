@@ -34,7 +34,7 @@
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.cqut.market.view.CustomView.RecyclerViewWithContextMenu
         android:longClickable="true"
         android:id="@+id/message_recycler"
         android:layout_width="match_parent"

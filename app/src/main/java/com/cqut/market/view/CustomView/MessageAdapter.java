@@ -75,6 +75,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             if (bitmap != null)
                 holder.right_head_image.setImageBitmap(bitmap);
             else holder.right_head_image.setImageResource(R.drawable.ic_launcher);
+
         }
 
     }
@@ -116,5 +117,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             left_head_image = itemView.findViewById(R.id.message_left_head_image);
 
         }
+    }
+    public Message getItem(int position) {
+        if (messages != null && (messages.size() >= position)) {
+            return messages.get(position);
+        }
+        return null;
     }
 }

@@ -33,7 +33,7 @@ public class ExpressViewPagerAdapter extends RecyclerView.Adapter<ExpressViewPag
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String string = list.get(position);
-        holder.textView.setText(string);
+
     }
 
     @Override
@@ -46,7 +46,6 @@ public class ExpressViewPagerAdapter extends RecyclerView.Adapter<ExpressViewPag
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.fragment_express_viewpager_item_text);
         }
 
     }

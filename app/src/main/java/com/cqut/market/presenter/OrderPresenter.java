@@ -1,5 +1,7 @@
 package com.cqut.market.presenter;
 
+import android.view.View;
+
 import com.cqut.market.beans.Comment;
 import com.cqut.market.model.Constant;
 import com.cqut.market.model.JsonUtil;
@@ -8,6 +10,7 @@ import com.cqut.market.view.OrderView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -20,6 +23,10 @@ public class OrderPresenter extends BasePresenter<OrderView> {
         model = new OrderModel();
     }
 
+    public void applyLikes(String id, OrderView orderView, View view) {
+        model.commentLikes(id, orderView, view);
+    }
+
     public void applyComment(Comment comment) {
         model.applyComment(comment, new Callback() {
             @Override
@@ -29,10 +36,10 @@ public class OrderPresenter extends BasePresenter<OrderView> {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String code = JsonUtil.getResponseCode(response.body().string());
-                if (code.equals(Constant.COMMENT_SUCCESS))
+                String code = JsonUtil.getResponseCode(Objects.requireNonNull(response.body()).string());
+                if (code != null && code.equals(Constant.COMMENT_SUCCESS)) {
                     getView().onCommentApply();
-                else {
+                } else {
                     getView().onCommentApplyFailed("评论失败");
                 }
             }
@@ -64,8 +71,8 @@ public class OrderPresenter extends BasePresenter<OrderView> {
             @Override
             public void onFailure(Call call, IOException e) {
                 OrderView view = getView();
-                if (view!=null)
-                view.onGetGoodFailed("商品详情获取失败");
+                if (view != null)
+                    view.onGetGoodFailed("商品详情获取失败");
             }
 
             @Override

@@ -25,7 +25,7 @@
                     android:id="@+id/activity_main_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#FFAB00"
+                    android:background="@color/mainColor"
                     android:fitsSystemWindows="true"
                     app:layout_scrollFlags="scroll|enterAlways|snap">
 
@@ -36,7 +36,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#FFAB00"
+                    android:background="@color/mainColor"
                     android:orientation="horizontal">
 
                     <EditText
@@ -46,7 +46,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="2dp"
                         android:background="@drawable/serach_background"
-                        android:hint="搜索"
+                        android:hint="@string/serach"
                         android:minWidth="150dp"
                         android:paddingStart="10dp" />
 
@@ -58,7 +58,7 @@
                         android:layout_margin="1dp"
                         android:layout_weight="1"
                         android:background="@drawable/bt_paixu_background"
-                        android:text="价格" />
+                        android:text="@string/price" />
 
                     <Button
                         android:id="@+id/order_by_sales"
@@ -68,7 +68,7 @@
                         android:layout_margin="1dp"
                         android:layout_weight="1"
                         android:background="@drawable/bt_paixu_background"
-                        android:text="销量" />
+                        android:text="@string/sales" />
 
                 </LinearLayout>
 
@@ -89,6 +89,8 @@
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/fragment_express_tab"
+                        app:tabSelectedTextColor="@color/mainColor"
+                        app:tabIndicatorColor="@color/mainColor"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_gravity="top" />
@@ -113,7 +115,7 @@
             android:layout_marginBottom="60dp"
             android:scaleType="centerCrop"
             android:src="@drawable/shop"
-            app:backgroundTint="#FFAB00"
+            app:backgroundTint="@color/mainColor"
             app:fabCustomSize="60dp"
             app:maxImageSize="70dp"
             app:rippleColor="@color/transparent" />

@@ -4,11 +4,31 @@ public class Comment {
     private String content;
     private String time;
     private String userName;
-    private String id;
+    private String goodId;
     private String userId;
+    private String commentId;
 
-    public String getId() {
-        return id;
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
+    }
+
+    private int likes=0;
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+
+    public String getGoodId() {
+        return goodId;
     }
     public String getUserId() {
         return userId;
@@ -18,20 +38,20 @@ public class Comment {
         this.userId = userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setGoodId(String goodId) {
+        this.goodId = goodId;
     }
     public Comment(String content,String userName,String id,String usrId) {
         this.userId=usrId;
         this.content = content;
         this.userName = userName;
-        this.id=id;
+        this.goodId =id;
         setTime(System.currentTimeMillis()+"");
     }
     public Comment(String content,String userName,String id) {
         this.content = content;
         this.userName = userName;
-        this.id=id;
+        this.goodId =id;
         setTime(System.currentTimeMillis()+"");
     }
 

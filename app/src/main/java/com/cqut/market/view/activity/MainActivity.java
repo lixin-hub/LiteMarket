@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -99,7 +100,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     ArrayList<Good> 日用 = new ArrayList<>();
     ArrayList<Good> 快递 = new ArrayList<>();
     ArrayList<Good> 酒饮 = new ArrayList<>();
-    ArrayList<Good> 速食 = new ArrayList<>();
+    ArrayList<Good> 速食 = new ArrayList<>();     
     CategoryFragment e1 = new CategoryFragment(零食);
     CategoryFragment e2 = new CategoryFragment(快递);
     CategoryFragment e3 = new CategoryFragment(早餐);
@@ -145,9 +146,6 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     private FragmentStateAdapter goodsAdapter;
     private TabLayoutMediator tabLayoutMediator;
     private AlertDialog dialog_check_stock;
-
-    @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHideStatueBar();
@@ -326,10 +324,11 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     private void addFragment(@NonNull Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(
-                        R.anim.slide_right_in,
-                        R.anim.slide_right_out
-                );
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                .setCustomAnimations(
+//                        R.anim.slide_right_in,
+//                        R.anim.slide_right_out
+//                );
         if (fragment.isAdded()) {
             return;
         }
@@ -469,24 +468,22 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         }
         switch (position) {
             case 0:
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //隐藏状态栏
                 getWindow().setStatusBarColor(Color.parseColor("#FFA110"));
                 if (currentPosition == 2) {
                     removeFragment(mineFragment);
                 } else if (currentPosition == 1)
-                    // removeFragment(expressFragment);
                     currentPosition = position;
                 break;
             case 1:
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //隐藏状态栏
                 getWindow().setStatusBarColor(Color.TRANSPARENT);
-                if (currentPosition == 2) {
-                    //removeFragment(mineFragment);
-                }
                 addFragment(expressFragment);
                 currentPosition = 1;
-                //new UpdateApp(this).update();
                 break;
             case 2:
-                getWindow().setStatusBarColor(Color.parseColor("#1E88E5"));
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //隐藏状态栏
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
                 if (currentPosition == 1)
                     removeFragment(expressFragment);
                 addFragment(mineFragment);

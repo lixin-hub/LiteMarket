@@ -16,7 +16,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +42,7 @@ import com.cqut.market.R;
 import com.cqut.market.beans.Message;
 import com.cqut.market.model.Constant;
 import com.cqut.market.model.FileUtil;
+import com.cqut.market.model.Util;
 import com.cqut.market.presenter.MessagePresenter;
 import com.cqut.market.view.CustomView.MessageAdapter;
 import com.cqut.market.view.CustomView.MyDialog;
@@ -59,14 +59,11 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private LinearLayout keybord_visibility, more_visibility;
-    private RecyclerView messageRecycler;
+    private RecyclerViewWithContextMenu messageRecycler;
     private MessageAdapter messageAdapter;
-    private ImageView keybord_image, more_image;
-    private Button bt_send;
     private String headImagePath;
     private EditText ed_content;
     private ProgressDialog progressDialog;
-    private TextView contact_us, about, new_activity;
     private RecyclerViewWithContextMenu.RecyclerViewContextInfo contextMenuInfo;
 
     @Override
@@ -87,32 +84,32 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
             headImagePath = preferences.getString(Constant.HEADIMAGE_PATH, null);
             userId = preferences.getString(Constant.USER_ID, "-1");
             keybord_visibility = findViewById(R.id.activity_message_navigation_keybord_visibility);
-            more_image = findViewById(R.id.activity_message_go_to_more);
-            keybord_image = findViewById(R.id.activity_message_go_to_keybord);
+            ImageView more_image = findViewById(R.id.activity_message_go_to_more);
+            ImageView keybord_image = findViewById(R.id.activity_message_go_to_keybord);
             more_visibility = findViewById(R.id.activity_message_navigation_more_visibility);
             messageRecycler = findViewById(R.id.message_recycler);
             messageRecycler.setLongClickable(true);
-            bt_send = findViewById(R.id.message_bt_send);
+            Button bt_send = findViewById(R.id.message_bt_send);
             ed_content = findViewById(R.id.message_input);
-            contact_us = findViewById(R.id.activity_message_more_contact_us);
-            about = findViewById(R.id.activity_message_navigation_about);
-            new_activity = findViewById(R.id.activity_message_navigation_new_activity);
+            TextView contact_us = findViewById(R.id.activity_message_more_contact_us);
+            TextView about = findViewById(R.id.activity_message_navigation_about);
+            TextView new_activity = findViewById(R.id.activity_message_navigation_new_activity);
             findViewById(R.id.activity_message_back).setOnClickListener((v) -> finish());
             messageAdapter = new MessageAdapter(this, messageQueue);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             linearLayoutManager.setInitialPrefetchItemCount(1);
-            BottomOffsetDecoration bottomOffsetDecoration = new BottomOffsetDecoration((int) 100);
+            BottomOffsetDecoration bottomOffsetDecoration = new BottomOffsetDecoration(100);
             messageRecycler.addItemDecoration(bottomOffsetDecoration);
             messageRecycler.setLayoutManager(linearLayoutManager);
             messageRecycler.setAdapter(messageAdapter);
             progressDialog = MyDialog.getProgressDialog(this, "Loading", "我在玩命加载啦~");
             progressDialog.show();
             messageRecycler.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
-                contextMenuInfo = (RecyclerViewWithContextMenu.RecyclerViewContextInfo) menuInfo;
                 menu.add(0, 1, 1, "删除");
             });
             more_image.setOnClickListener((v) -> {
+                Util.vibrator(this, 50);
                 if (ed_content.hasFocus()) {
                     showKeyboard(false);
                 }
@@ -120,6 +117,7 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
                 navigationAnimator(Constant.ANIMATOR_IN, more_visibility);
             });
             keybord_image.setOnClickListener((v) -> {
+                Util.vibrator(this, 50);
                 navigationAnimator(Constant.ANIMATOR_OUT, more_visibility);
                 navigationAnimator(Constant.ANIMATOR_IN, keybord_visibility);
             });
@@ -142,13 +140,16 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
                 if (messageQueue != null && messageQueue.size() > 1)
                     messageRecycler.smoothScrollToPosition(messageQueue.size() - 1);
             });
-            contact_us.setOnClickListener((v) -> {
-                showContactPopMenu(v);
+            contact_us.setOnClickListener(view -> {
+                Util.vibrator(this, 50);
+                showContactPopMenu(view);
             });
-            about.setOnClickListener(v -> {
-                showAboutPopMenu(v);
+            about.setOnClickListener(view -> {
+                Util.vibrator(this,50);
+                showAboutPopMenu(view);
             });
             new_activity.setOnClickListener((v -> {
+                Util.vibrator(this,50);
                 getPresenter().requestMessage(Constant.GET_MESSAGE_NEW_ACTIVITY, userId, this);
             }));
         }//init
@@ -204,14 +205,16 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == 1) {
+            RecyclerViewWithContextMenu.RecyclerViewContextInfo contextMenuInfo = (RecyclerViewWithContextMenu.RecyclerViewContextInfo) item.getMenuInfo();
             if (contextMenuInfo != null && contextMenuInfo.getPosition() > 0) {
-                Message message = messageQueue.get(contextMenuInfo.getPosition());
-                if (message != null)
+                Message message = messageAdapter.getItem(contextMenuInfo.getPosition());
+                if (message != null&&message.getMessageType()!=Message.TYPE_ACTIVITY)
                     getPresenter().clearMessage(message.getId(), this);
             }
         }
         return super.onContextItemSelected(item);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.message_menue, menu);
@@ -269,7 +272,6 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
             intent.setComponent(cmp);
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            // TODO: handle exception
             MyDialog.showToast(this, "检查到您手机没有安装微信，请安装后使用该功能");
         }
     }
@@ -349,9 +351,11 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
     public void onMessageResult(List<Message> messages) {
         if (progressDialog != null && progressDialog.isShowing())
             progressDialog.dismiss();
-        if (messages == null || messages.size() < 0) {
+        if (messages == null || messages.size() == 0) {
+            MyDialog.showToast(this, "没有新消息");
             return;
         }
+
         messageQueue.clear();
         messageQueue.addAll(messages);
         runOnUiThread(() -> {

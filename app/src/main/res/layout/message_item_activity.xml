@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
-        android:text="3月14日 上午10:32" />
+ />
 
     <androidx.cardview.widget.CardView
         android:outlineSpotShadowColor="@color/transparent"
@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/back_item" />
+                 />
 
             <TextView
                 android:id="@+id/message_activity_content"
@@ -47,7 +47,6 @@
                 android:layout_gravity="start"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
-                android:text="致敬半边天|3.8妇女节，我们约会吧！香辣鸡腿汉堡仅3.8元"
                 android:textColor="#E9000000"
                 android:textSize="15dp" />
 
@@ -60,7 +59,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
-                android:text="三八妇女节，问候最美的你们" />
+             />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

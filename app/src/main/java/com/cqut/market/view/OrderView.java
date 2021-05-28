@@ -1,6 +1,8 @@
 package com.cqut.market.view;
 
 
+import android.view.View;
+
 import com.cqut.market.beans.Comment;
 import com.cqut.market.beans.Good;
 
@@ -13,4 +15,5 @@ public interface OrderView extends BaseView {
    void onGetCommentsFailed(String message);
    void onGetGoodSuccess(Good good);
    void onGetGoodFailed(String message);
+   void onLikesSuccess(String message, View view);
 }

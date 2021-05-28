@@ -4,10 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,6 +34,14 @@ import com.cqut.market.view.CustomView.MyBadge;
 import com.cqut.market.view.CustomView.MyDialog;
 import com.cqut.market.view.MineView;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
 public class MineFragment extends Fragment implements MineView, View.OnClickListener {
     private String user_id;
     private MineModel mineModel;
@@ -43,6 +54,7 @@ public class MineFragment extends Fragment implements MineView, View.OnClickList
     private AlertDialog setNickNameDialog;
     private TextView cache_size;
     private MyBadge myBadge;
+    private ImageView image_background;
 
     public MineFragment() {
 
@@ -52,6 +64,7 @@ public class MineFragment extends Fragment implements MineView, View.OnClickList
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
+        image_background = view.findViewById(R.id.fragment_mine_head_background_image);
         RelativeLayout order, addr, person, problem, clear, about;
         order = view.findViewById(R.id.mine_order);
         addr = view.findViewById(R.id.mine_recive_addr);
@@ -94,7 +107,7 @@ public class MineFragment extends Fragment implements MineView, View.OnClickList
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (!hidden){
+        if (!hidden) {
             isNewMessage();
         }
     }
@@ -134,7 +147,27 @@ public class MineFragment extends Fragment implements MineView, View.OnClickList
         if (nickName.equals("-1") || nickName.equals(""))
             text_nickName.setText("怎么称呼您?");
         else text_nickName.setText(nickName);
-
+        String path_pic = preferences.getString(Constant.BING_PIC, null);
+        if (path_pic!=null){
+            Glide.with(getContext()).load(path_pic).into(image_background);
+        }else {
+            NetWorkUtil.sendRequest("http://guolin.tech/api/bing_pic", new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                }
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    String path = response.body().string();
+                    if (path != null) {
+                        editor.putString(Constant.BING_PIC, path);
+                        editor.apply();
+                        getActivity().runOnUiThread(() -> {
+                            Glide.with(getContext()).load(path).into(image_background);
+                        });
+                    }
+                }
+            });
+        }
     }
 
     @Override

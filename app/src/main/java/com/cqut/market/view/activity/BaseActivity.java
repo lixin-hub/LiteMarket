@@ -43,6 +43,9 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
        //设置状态栏的颜色
        window.setStatusBarColor(Color.TRANSPARENT);
+//       getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
+//       getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //显示状态栏
+
    }
     protected abstract P createPresenter();
 

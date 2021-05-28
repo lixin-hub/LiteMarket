@@ -127,7 +127,7 @@ public class MessageModel {
                 String string = response.body().string();
                 String responseCode = JsonUtil.getResponseCode(string);
                 if (responseCode != null && responseCode.equals(Constant.CLEAR_MESSAGE_SUCCESS))
-                    messageView.onClear("所有消息删除成功");
+                    messageView.onClear("删除成功");
                 else
                     messageView.onClear("失败");
             }

@@ -31,7 +31,7 @@ public class Constant {
     public static final String HEADIMAGE_PATH = "headImagePath";
     public static final String PROBLEMIMAGE_NAME = "problem";
     public static final String PROBLEMIMAGE_PATH = "problemPath";
-    public static final int GET_MESSAGE_NEW_ACTIVITY = 10;
+    public static final int GET_MESSAGE_NEW_ACTIVITY = 1000000;
     public static final String DELETE_ACCOUNT_SUCESS = "-1300";
     public static final String CONTENT_ERROR = "-1400";//用户名或者密码错误
     public static final String UPLOAD_FILE_SUCCESS = "-1500";
@@ -40,6 +40,9 @@ public class Constant {
     public static final String SEND_MESSAGE_SUCCESS = "-1800";
     public static final String MESSAGE_NONE = "-1900";//没有消息
     public static final String VIBRATORABLE = "vibrateable";//允许震动
+    public static final long LUNCH_TIME = 0;//启动时间
+    public static final String BING_PIC = "bing_pic";
+    public static final String DAY = "day";//日期 、判断是不是新的一天，
     public static List<Order> orders = new ArrayList<>();//缓存
     public static User user;//缓存
     public static String MY_MARKET_NAME = "MY_MARKET";//本地数据表名称
@@ -72,7 +75,8 @@ public class Constant {
     public static String UPDATE_SUCCESS = "-1200";
     public static final String ORDER_CANCEL_FAILED = "-2000";
     public static final String ORDER_CANCEL_SUCCESS ="-2100";
-    public static final String CLEAR_MESSAGE_SUCCESS = "2200";
+    public static final String CLEAR_MESSAGE_SUCCESS = "-2200";
+    public static String LIKES_SUCCESS="-2300";
 
     public static String EXTERNAL_STORAGE;
     public static int ANIMATOR_IN = 1;

@@ -2,9 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
-
+    <ImageView
+        android:background="#1E88E5"
+        android:layout_alignParentTop="true"
+        android:id="@+id/fragment_mine_head_background_image"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:scaleType="center"
+    />
     <include
+        android:layout_marginTop="20dp"
         layout="@layout/fragment_mine_head"
         android:layout_width="match_parent"
         android:layout_height="250dp"

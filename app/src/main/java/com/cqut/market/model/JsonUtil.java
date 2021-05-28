@@ -53,10 +53,14 @@ public class JsonUtil {
         String userName = object.getString("userName");
         String time = object.getString("time");
         String content = object.getString("content");
-        String id = object.getString("id");
+        String id = object.getString("goodId");
         String userId = object.getString("userId");
+        String commentId = object.getString("_id");
+        int likes = object.getInt("likes");
         Comment comment = new Comment(content, userName, id, userId);
         comment.setTime(time);
+        comment.setLikes(likes);
+        comment.setCommentId(commentId);
         return comment;
     }
 

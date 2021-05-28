@@ -1,51 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardCornerRadius="2dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/comment_item_user"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="3dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="3dp"
-                android:text="快乐星球"
-                android:textColor="#0277BD" />
+                android:orientation="vertical">
 
-            <com.cqut.market.view.CustomView.ColorfulTextView
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:id="@+id/comment_item_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="3dp" />
+                <ImageView
+                    android:id="@+id/comments_likes"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/likes" />
 
-            <TextView
-                android:id="@+id/comment_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="3dp"
-                android:textColor="#646D73" />
-        </LinearLayout>
+                <com.cqut.market.view.CustomView.ColorfulTextView
+                    android:id="@+id/comment_likes_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/comment_item_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="3dp"
+                    android:text="快乐星球"
+                    android:textColor="#0277BD" />
+
+                <com.cqut.market.view.CustomView.ColorfulTextView
+                    android:id="@+id/comment_item_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="3dp"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/comment_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="3dp"
+                    android:textColor="#646D73" />
+            </LinearLayout>
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
-</LinearLayout>
+</RelativeLayout>

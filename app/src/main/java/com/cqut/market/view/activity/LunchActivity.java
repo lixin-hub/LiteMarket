@@ -12,10 +12,12 @@ import android.view.WindowManager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.cqut.market.R;
 import com.cqut.market.model.Constant;
 import com.cqut.market.view.CustomView.MyDialog;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -34,6 +36,13 @@ public class LunchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lunch);
         SharedPreferences sharedPreferences = this.getSharedPreferences(Constant.MY_MARKET_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        int day = new Date(System.currentTimeMillis()).getDay();
+        if (sharedPreferences.getInt(Constant.DAY,0)!=day){//如果是新的一天就清除图片缓存
+            editor.remove(Constant.BING_PIC);
+            editor.putInt(Constant.DAY,day);
+            editor.apply();
+            new Thread(() -> Glide.get(this).clearDiskCache()).start();
+        }
         long time = sharedPreferences.getLong(Constant.LAST_LOGIN_TIME, System.currentTimeMillis());
         if ((System.currentTimeMillis() - time) >= Constant.INVALID_TIME) {//登录过期
             editor.clear();
@@ -56,8 +65,7 @@ public class LunchActivity extends AppCompatActivity {
                         finish();
                     }
                 }
-            }, 2000);
-
+            }, Constant.LUNCH_TIME);
         }
     }
 }

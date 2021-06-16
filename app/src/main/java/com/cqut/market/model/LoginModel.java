@@ -1,5 +1,7 @@
 package com.cqut.market.model;
 
+import androidx.annotation.NonNull;
+
 import com.cqut.market.beans.User;
 
 import java.io.IOException;
@@ -26,7 +28,7 @@ public class LoginModel implements Callback {
 
     }
 
-    public void login(String userName, String password, LoginListener loginListener) {
+    public void login( String userName, String password, LoginListener loginListener) {
         this.listener = loginListener;
         RequestBody body = new FormBody.Builder()
                 .add("userName", userName)

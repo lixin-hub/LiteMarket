@@ -6,4 +6,5 @@
     <string name="price">价格</string>
     <string name="sales">销量</string>
     <string name="serach">搜索</string>
+    <string name="input_phone_number">请输入手机号码</string>
 </resources>

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -64,7 +63,8 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
             loginDialog.show();
         });
         text_forget_password.setOnClickListener(v -> {
-
+            Intent intent1 = new Intent(LoginActivity.this, FindPasswordActivity.class);
+            startActivity(intent1);
         });
 
         text_register.setOnClickListener(v -> {

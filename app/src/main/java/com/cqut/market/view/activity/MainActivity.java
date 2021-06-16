@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -78,7 +77,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -100,7 +98,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     ArrayList<Good> 日用 = new ArrayList<>();
     ArrayList<Good> 快递 = new ArrayList<>();
     ArrayList<Good> 酒饮 = new ArrayList<>();
-    ArrayList<Good> 速食 = new ArrayList<>();     
+    ArrayList<Good> 速食 = new ArrayList<>();
     CategoryFragment e1 = new CategoryFragment(零食);
     CategoryFragment e2 = new CategoryFragment(快递);
     CategoryFragment e3 = new CategoryFragment(早餐);
@@ -146,6 +144,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     private FragmentStateAdapter goodsAdapter;
     private TabLayoutMediator tabLayoutMediator;
     private AlertDialog dialog_check_stock;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHideStatueBar();
@@ -271,7 +270,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         });
     }
 
-    private List<Fragment> initCategory(ArrayList<Good> goods) {
+    private void initCategory(ArrayList<Good> goods) {
         fragments.clear();
         零食.clear();
         快递.clear();
@@ -313,7 +312,6 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         fragments.add(e4);
         fragments.add(e5);
         fragments.add(e6);
-        return fragments;
     }
 
     @Override
@@ -368,20 +366,21 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         allGoods.clear();
         allGoods.addAll(goods);
         long time1 = sharedPreferences.getLong(Constant.LAST_GOOD_IMAGE_UPDATE_TIME, System.currentTimeMillis());
-        if (System.currentTimeMillis() - time1 > Constant.GOOD_IMAGE_UPDATE_TIME) {
-            Glide.get(MainActivity.this).clearDiskCache();
-            editor = editor.putLong(Constant.LAST_GOOD_IMAGE_UPDATE_TIME, System.currentTimeMillis());
-            editor.apply();
-        }
+        if (Constant.NETWORK_INFO)
+            if (System.currentTimeMillis() - time1 > Constant.GOOD_IMAGE_UPDATE_TIME) {
+                Glide.get(MainActivity.this).clearDiskCache();
+                editor = editor.putLong(Constant.LAST_GOOD_IMAGE_UPDATE_TIME, System.currentTimeMillis());
+                editor.apply();
+            }
         runOnUiThread(() -> {
             if (goodsAdapter == null) {
-                goodsAdapter = new FragmentStateAdapter(getSupportFragmentManager(), getLifecycle(), initCategory(allGoods));
+                initCategory(allGoods);
+                goodsAdapter = new FragmentStateAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
                 viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
                 viewPager2.setAdapter(goodsAdapter);
                 tabLayoutMediator.attach();
             } else {
-                initCategory(allGoods);
-                goodsAdapter.notifyDataSetChanged();
+                // initCategory(allGoods);
                 ((CategoryFragment) fragments.get(tableIndex)).notifyData();
             }
             if (dialog_check_stock != null && dialog_check_stock.isShowing()) {
@@ -402,7 +401,8 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
             for (Good g : goods) {
                 if (g != null && g.getCategory().equals("7") && p < 5) {
                     images.get(p).setTag(g.getId());
-                    Glide.with(this).load(url + g.getImageName()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(images.get(p));
+                    if (Constant.NETWORK_INFO)
+                        Glide.with(this).load(url + g.getImageName()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(images.get(p));
                     p++;
                 }
             }

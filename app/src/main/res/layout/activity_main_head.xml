@@ -12,6 +12,7 @@
         android:layout_height="120dp">
 
         <com.cqut.market.view.CustomView.Image3DView
+            android:src="@drawable/likes"
             android:id="@+id/activity_main_head_3dswitch_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,6 +21,7 @@
             />
 
         <com.cqut.market.view.CustomView.Image3DView
+            android:src="@drawable/likes"
             android:id="@+id/activity_main_head_3dswitch_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,6 +30,7 @@
             />
 
         <com.cqut.market.view.CustomView.Image3DView
+            android:src="@drawable/likes"
             android:id="@+id/activity_main_head_3dswitch_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,6 +39,7 @@
             />
 
         <com.cqut.market.view.CustomView.Image3DView
+            android:src="@drawable/likes"
             android:id="@+id/activity_main_head_3dswitch_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,6 +48,7 @@
            />
 
         <com.cqut.market.view.CustomView.Image3DView
+            android:src="@drawable/likes"
             android:id="@+id/activity_main_head_3dswitch_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

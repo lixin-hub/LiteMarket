@@ -48,8 +48,8 @@ dependencies {
     implementation files('libs/json-lib-1.1-jdk13.jar')
     implementation files('libs/xom-1.0d10.jar')
     implementation files('libs/mongo-java-driver-3.1.0.jar')
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     testImplementation 'junit:junit:'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'

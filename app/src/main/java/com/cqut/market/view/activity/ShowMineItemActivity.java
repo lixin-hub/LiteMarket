@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -105,7 +106,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
     private LinearLayout receive_good_info_parent;
     private MyPop popupWindow_recive_good;
     private ImageView image_show_order_pop;
-    TimerTask task = new TimerTask() {
+    private final TimerTask task = new TimerTask() {
         @Override
         public void run() {
             runOnUiThread(() -> {
@@ -116,6 +117,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         }
     };
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,9 +138,9 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
             Toast.makeText(this, "未知错误", Toast.LENGTH_SHORT).show();
             finish();
         }
+        getWindow().setStatusBarColor(Color.WHITE);
         switch (item) {
             case Constant.MINE_ORDER:
-                getWindow().setStatusBarColor(Color.WHITE);
                 setContentView(R.layout.fragment_order_list_view_page);
                 vpSwipeRefreshLayout = findViewById(R.id.fragment_mine_order_list_view_page_refresh);
                 vpSwipeRefreshLayout.setOnRefreshListener(this);
@@ -158,7 +160,6 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
                 showOrdersInfo(orders);
                 break;
             case Constant.MINE_RECIVIE_GOOD_EDIT_INFO:
-                getWindow().setStatusBarColor(Color.WHITE);
                 setContentView(R.layout.fragment_mine_receive_edit_info);
                 uploadReceiveGoodInfo();
                 break;
@@ -167,12 +168,10 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
                 showPersonalInfo();
                 break;
             case Constant.MINE_PROBLEM_CALLBACK:
-                getWindow().setStatusBarColor(Color.WHITE);
                 setContentView(R.layout.fragment_mine_problem_callback);
                 handleProblemCallback();
                 break;
             case Constant.MINE_ABOUT:
-                getWindow().setStatusBarColor(Color.WHITE);
                 String argumentUrl = Constant.HOST + "argument";
                 setContentView(R.layout.fragment_mine_about);
                 Button bt_update = findViewById(R.id.fragment_mine_about_check_update);

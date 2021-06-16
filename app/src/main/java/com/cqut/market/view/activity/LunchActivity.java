@@ -32,7 +32,7 @@ public class LunchActivity extends AppCompatActivity {
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         //设置状态栏的颜色
-        window.setStatusBarColor(Color.WHITE);
+        window.setStatusBarColor(Color.TRANSPARENT);
         setContentView(R.layout.activity_lunch);
         SharedPreferences sharedPreferences = this.getSharedPreferences(Constant.MY_MARKET_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -1,7 +1,6 @@
 package com.cqut.market.model;
 
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,22 +11,11 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Vibrator;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.core.app.NotificationCompat;
 
-import com.bumptech.glide.Glide;
 import com.cqut.market.R;
-import com.cqut.market.view.activity.MainActivity;
 import com.cqut.market.view.activity.ShowMineItemActivity;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 public class Util {
     public static void vibrator(Context context, long ms) {
@@ -37,8 +25,16 @@ public class Util {
             vibrator.vibrate(ms);
         }
     }
-
-
+    public static void aphAnim(View view,float... values){
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, "alpha", values);
+        objectAnimator.setDuration(200);
+        objectAnimator.start();
+    }
+    public static void transAnim(View view,String name,float... values){
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, name, values);
+        objectAnimator.setDuration(200);
+        objectAnimator.start();
+    }
     public static void clickAnimator(View v) {
         vibrator(v.getContext(), 50);
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(v, "alpha", 1, 0, 1);

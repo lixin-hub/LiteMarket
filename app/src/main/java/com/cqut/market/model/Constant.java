@@ -7,6 +7,8 @@ import com.cqut.market.beans.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Response;
+
 public class Constant {
     public static final String HOST_LOCAL = "http://192.168.43.245:8088/LiteMarket/";
     public static final String HOST_INTERNET = "https://3j4m729509.goho.co/LiteMarket/";
@@ -60,6 +62,7 @@ public class Constant {
     public static String LAST_GOOD_IMAGE_UPDATE_TIME = "imageUpdateTime";//一天
     public static final String NEW_MESSAGE_COUNT = "countOfNewMessage";
     public static long GOOD_IMAGE_UPDATE_TIME = 1000 * 60 * 60*24;//一分钟
+    public static final short S =1234;//加密
     public static String CONNECT_FAILED = "100";//
     public static String USER_EXISTED = "-100";//
     public static String LOGIN_SUCCESS = "-200";
@@ -77,6 +80,10 @@ public class Constant {
     public static final String ORDER_CANCEL_SUCCESS ="-2100";
     public static final String CLEAR_MESSAGE_SUCCESS = "-2200";
     public static String LIKES_SUCCESS="-2300";
+    public static final String VERIFICATION_PHONE_SUCCESS = "-2400";
+    public static final String VERIFICATION_PHONE_FAILURE = "-2500";
+    public static final String SEND_MAIL_FAILED = "-2600";
+    public static final String SEND_MAIL_SUCCESS = "-2700";
 
     public static String EXTERNAL_STORAGE;
     public static int ANIMATOR_IN = 1;

@@ -14,7 +14,7 @@
         android:color="@color/transparent" />
 
     <!-- 设置矩形内的颜色,此处为透明色 -->
-    <solid android:color="#234E4E4E" />
+    <solid android:color="#0C4E4E4E" />
 
 
     <!-- 定义圆角弧度 -->

@@ -10,14 +10,22 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.cqut.market.R;
+import com.cqut.market.beans.User;
 import com.cqut.market.model.Constant;
 import com.cqut.market.presenter.SignUpPresenter;
-import com.cqut.market.beans.User;
 import com.cqut.market.view.CustomView.MyDialog;
 import com.cqut.market.view.SignUpView;
 
+import org.bson.Document;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> implements SignUpView {
 
@@ -27,26 +35,28 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
     private EditText ed_password_again;
     private EditText ed_check_code;
     private Button bt_check_code;
-    private String cheekCode;
     private int counter = 50;
     private Timer timer = null;
     private AlertDialog signDialog;
+    private String finalCode = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHideStatueBar();
-      int mode=getIntent().getIntExtra("mode",1);
-      switch (mode){
-          case 1://邮箱
-              signupView();
-              break;
-          case 2://免验证
-              signupYouKeView();
-              break;
+        int mode = getIntent().getIntExtra("mode", 1);
+        switch (mode) {
+            case 1://邮箱
+                signupView();
+                break;
+            case 2://免验证
+                signupYouKeView();
+                break;
 
-      }    }
-    private void signupYouKeView(){
+        }
+    }
+
+    private void signupYouKeView() {
         setContentView(R.layout.activity_signup_youke);
         bt_signup = findViewById(R.id.signup_button);
         ed_password = findViewById(R.id.signup_inout_password);
@@ -72,13 +82,14 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
                 Toast.makeText(SignUpActivity.this, "两次密码不一样", Toast.LENGTH_SHORT).show();
                 return;
             }
-                AlertDialog.Builder builder=MyDialog.getDialog(this,"正在注册","请稍候");
-                 signDialog=builder.create();
-                 signDialog.show();
-                getPresenter().signup(username, password);
+            AlertDialog.Builder builder = MyDialog.getDialog(this, "正在注册", "请稍候");
+            signDialog = builder.create();
+            signDialog.show();
+            getPresenter().signup(username, password);
         });
     }
-    private void signupView(){
+
+    private void signupView() {
         setContentView(R.layout.activity_signup);
         bt_signup = findViewById(R.id.signup_button);
         ed_password = findViewById(R.id.signup_inout_password);
@@ -87,7 +98,7 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
         ed_check_code = findViewById(R.id.signup_inout_checkcode);
         bt_check_code = findViewById(R.id.signup_send_check_code);
         bt_check_code.setOnClickListener(v -> {
-
+            bt_check_code.setEnabled(false);
             String username = ed_username.getText().toString().trim();
             String password = ed_password.getText().toString().trim();
             String password_again = ed_password_again.getText().toString().trim();
@@ -115,30 +126,63 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
                 Toast.makeText(SignUpActivity.this, "密码至少6位", Toast.LENGTH_SHORT).show();
                 return;
             }
-            char[] arr = String.valueOf(System.currentTimeMillis()).toCharArray();
-            cheekCode = arr[arr.length - 1] + "" + arr[arr.length - 3] + "" + arr[arr.length - 2] + "" + arr[arr.length - 4];
-            getPresenter().sendCheckCode(username, cheekCode);
-            timer = new Timer();
-            timer.schedule(new TimerTask() {
+            getPresenter().sendCheckCode(username, new Callback() {
                 @Override
-                public void run() {
-                    counter--;
-                    if (counter > 0) {
-                        runOnUiThread(() -> {
-                            bt_check_code.setEnabled(false);
-                            bt_check_code.setText(counter + "s后重新获取");
-                        });
-
-                    } else {
-                        runOnUiThread(() -> {
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
                             bt_check_code.setEnabled(true);
-                            bt_check_code.setText("重新获取");
-                        });
-                        timer.cancel();
-                        counter = 40;
-                    }
+                            MyDialog.showToast(SignUpActivity.this, "发送失败");
+                        }
+                    });
                 }
-            }, 0, 1000);
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    String doc = response.body().string();
+                    Document parse = Document.parse(doc);
+                    runOnUiThread(() -> {
+                        if (parse != null) {
+                            String responseCode = parse.getString("responseCode");
+                            if (responseCode.equals(Constant.SEND_MAIL_SUCCESS)) {
+                                MyDialog.showToast(SignUpActivity.this, "发送成功");
+                                String code = parse.getString("Code");
+                                if (code == null) {
+                                    MyDialog.showToast(SignUpActivity.this, "发送失败");
+                                    return;
+                                }
+                                finalCode = String.valueOf(Integer.parseInt(code, 2) / Constant.S);
+                                timer = new Timer();
+                                timer.schedule(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        counter--;
+                                        if (counter > 0) {
+                                            runOnUiThread(() -> {
+                                                bt_check_code.setEnabled(false);
+                                                bt_check_code.setText(counter + "s后重新获取");
+                                            });
+
+                                        } else {
+                                            runOnUiThread(() -> {
+                                                bt_check_code.setEnabled(true);
+                                                bt_check_code.setText("重新获取");
+                                            });
+                                            timer.cancel();
+                                            counter = 40;
+                                        }
+                                    }
+                                }, 0, 1000);
+                            } else {
+                                MyDialog.showToast(SignUpActivity.this, "发送失败");
+                            }
+                        }
+                    });
+
+                }
+            });
+
         });
         bt_signup.setOnClickListener(v -> {
             String username = ed_username.getText().toString().trim();
@@ -165,15 +209,17 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
                 Toast.makeText(SignUpActivity.this, "验证码不能为空", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (cheekCode1.equals(cheekCode)) {
-                AlertDialog.Builder builder=MyDialog.getDialog(this,"正在注册","请稍候");
-                signDialog=builder.create();
+            if (cheekCode1.equals(finalCode)) {
+                finalCode = "";
+                AlertDialog.Builder builder = MyDialog.getDialog(this, "正在注册", "请稍候");
+                signDialog = builder.create();
                 signDialog.show();
                 getPresenter().signup(username, password);
-            }else Toast.makeText(SignUpActivity.this, "验证码错误", Toast.LENGTH_SHORT).show();
+            } else Toast.makeText(SignUpActivity.this, "验证码错误", Toast.LENGTH_SHORT).show();
 
         });
     }
+
     @Override
     protected SignUpPresenter createPresenter() {
         return new SignUpPresenter();
@@ -187,7 +233,7 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
 
     @Override
     public void onSignResult(User user, String code) {
-        if (signDialog!=null&&signDialog.isShowing())
+        if (signDialog != null && signDialog.isShowing())
             signDialog.dismiss();
         if (code.equals(Constant.CONNECT_FAILED)) {
             MyDialog.showToast(this, "连接异常");
@@ -216,7 +262,7 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent=new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }

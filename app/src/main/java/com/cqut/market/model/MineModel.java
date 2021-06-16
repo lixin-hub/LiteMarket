@@ -13,7 +13,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class MineModel {
-    final String url =  Constant.HOST +"userinfo";
+    final String url = Constant.HOST + "userinfo";
 
     public void getUserInfo(String id, MineView mineView) {
         if (!Constant.NETWORK_INFO) {
@@ -54,7 +54,7 @@ public class MineModel {
 
     private void getUserInfoInLocal(MineView mineView) {
         String jsonstr = FileUtil.getData("userInfo");
-        if (jsonstr != null&& !jsonstr.equals(""))
+        if (jsonstr != null && !jsonstr.equals(""))
             mineView.onGetUserInfoSuccess(JsonUtil.parseJsonToUser(jsonstr));
     }
 

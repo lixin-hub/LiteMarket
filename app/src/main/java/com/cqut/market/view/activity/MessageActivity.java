@@ -65,11 +65,17 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
     private EditText ed_content;
     private ProgressDialog progressDialog;
     private RecyclerViewWithContextMenu.RecyclerViewContextInfo contextMenuInfo;
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         {
+            overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
             Window window = getWindow();
             //设置修改状态栏
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);

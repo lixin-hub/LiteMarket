@@ -9,6 +9,9 @@ import com.cqut.market.beans.User;
 import com.cqut.market.view.SignUpView;
 import com.cqut.market.view.activity.LoginActivity;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+
 public class SignUpPresenter extends BasePresenter<SignUpView> {
 
     private final SignUpModel signUpModel;
@@ -30,8 +33,8 @@ public class SignUpPresenter extends BasePresenter<SignUpView> {
             }
         });
     }
-    public void sendCheckCode(String userName,String code){
-        signUpModel.sendCheckCode(userName,code);
+    public void sendCheckCode(String userName, Callback callback){
+        signUpModel.sendCheckCode(userName,callback );
     }
 
 }

@@ -18,6 +18,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/Theme.LiteMarket">
+        <activity android:name=".view.activity.FindPasswordActivity"></activity>
         <activity
             android:name=".view.activity.MessageActivity"
             android:launchMode="singleTask"
@@ -61,7 +62,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

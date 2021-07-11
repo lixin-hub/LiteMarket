@@ -118,7 +118,7 @@ public class CheckOrderListAdapter extends RecyclerView.Adapter<CheckOrderListAd
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(((ShowMineItemActivity) context), new String[]{Manifest.permission.CALL_PHONE}, ShowMineItemActivity.CALL_PHONE);
                 } else {
-                    ((ShowMineItemActivity) context).callPhone("15823626029");
+                    ((ShowMineItemActivity) context).callPhone(Constant.MY_PHONE_NUMBER);
                     dialog.dismiss();
                 }
             });

@@ -4,12 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cqut.market.R;
+import com.cqut.market.model.Util;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class ExpressViewPagerAdapter extends RecyclerView.Adapter<ExpressViewPag
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.fragment_express_viewpager_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.fragment_contribution, parent, false);
         return new ViewHolder(view);
     }
 
@@ -37,13 +39,17 @@ public class ExpressViewPagerAdapter extends RecyclerView.Adapter<ExpressViewPag
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
+    @Override
     public int getItemCount() {
         return list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
         }

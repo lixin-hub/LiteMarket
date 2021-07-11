@@ -59,7 +59,6 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
     private CommentListAdapter commentArrayAdapter;
     private FloatingActionButton bt_comment;
     private String goodId;
-    private String headId;
     private TextView order_description;
     private TextView order_description_time;
     private ImageView image_good;
@@ -245,14 +244,6 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
         return null;
     }
 
-    private int getStateBarHeight() {
-        int result = 0;
-        int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = this.getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
 
     @Override
     public void onBackPressed() {

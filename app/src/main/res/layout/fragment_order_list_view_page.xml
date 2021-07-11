@@ -17,7 +17,7 @@
             <ImageView
                 android:id="@+id/fragment_mine_order_info_back"
                 android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/back" />
 

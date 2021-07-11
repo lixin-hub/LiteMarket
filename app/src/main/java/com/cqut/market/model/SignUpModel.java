@@ -1,22 +1,16 @@
 package com.cqut.market.model;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import com.cqut.market.beans.User;
-import com.sun.mail.util.MailSSLSocketFactory;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.Properties;
-
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import java.util.HashMap;
+import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -27,11 +21,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class SignUpModel implements Callback {
-    private static final String url =  Constant.HOST +"signup";
-    private static final String mail =  Constant.HOST +"mail?action=register_verify&UserMail=";
-    private static final String host="smtp.qq.com";
-    private static final String email="763819849@qq.com";
-    private static final String password="alhirggvcbsxbcfh";
+    private static final String url = Constant.HOST + "signup";
+    private static final String mail = Constant.HOST + "mail?action=register_verify&UserMail=";
     private SignupListener listener;
 
     public void signup(@NonNull String userName, @NonNull String password, @NonNull SignUpModel.SignupListener signupListener) {
@@ -57,18 +48,38 @@ public class SignUpModel implements Callback {
     public void onResponse(Call call, Response response) {
         try {
             String result = response.body().string();
-                listener.onSuccess(JsonUtil.parseJsonToUser(result),JsonUtil.getResponseCode(result));
+            listener.onSuccess(JsonUtil.parseJsonToUser(result), JsonUtil.getResponseCode(result));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public  void sendCheckCode(String toEmail,Callback callback){
-        NetWorkUtil.sendRequest(mail + toEmail,callback);
+    public void sendCheckCode(String toEmail, Callback callback) {
+        NetWorkUtil.sendRequest(mail + toEmail, callback);
     }
+
+
+
+    public static void uploadDeviceId(UUID uuid, String userId) {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("DEVICE_ID", uuid.toString());
+        hashMap.put("userId", userId);
+        NetWorkUtil.sendRequestAddParms(url, hashMap, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+            }
+        });
+    }
+
     public interface SignupListener {
         void onFailed();
 
-        void onSuccess(User user,String responseCode);
+        void onSuccess(User user, String responseCode);
     }
 }

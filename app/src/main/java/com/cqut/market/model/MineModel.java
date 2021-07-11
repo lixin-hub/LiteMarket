@@ -82,10 +82,16 @@ public class MineModel {
                 String jsonstr = response.body().string();
                 if (jsonstr != null) {
                     String responseCode = JsonUtil.getResponseCode(jsonstr);
-                    if (responseCode != null && responseCode.equals(Constant.UPDATE_SUCCESS))
+                    if (responseCode == null) {
+                        mainView.onPostUserInfoFailed("更新失败");
+                        return;
+                    }
+
+                    if (responseCode.equals(Constant.UPDATE_SUCCESS))
                         mainView.onPostUserInfoSuccess();
-                } else
-                    mainView.onPostUserInfoFailed("失败");
+                    else
+                        mainView.onPostUserInfoFailed("号码已经存在");
+                }
             }
         });
     }

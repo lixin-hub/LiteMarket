@@ -148,6 +148,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHideStatueBar();
+        getWindow().setNavigationBarColor(Color.parseColor("#FFA110"));
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
@@ -157,7 +158,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         if (userId.equals("")) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-            finish();
+            super.finish();
         }
         editor = sharedPreferences.edit();
         orderedList = new ArrayList<>();
@@ -210,7 +211,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 .setInActiveColor("#929292") // 未选中状态颜色
                 .setActiveColor("#FFFFFF") // 选中状态颜色
                 .addItem(new BottomNavigationItem(R.drawable.main, "商品").setInactiveIconResource(R.drawable.main).setActiveColor("#FFA110"))// 添加Item
-                .addItem(new BottomNavigationItem(R.drawable.main, "活动").setInactiveIconResource(R.drawable.main))
+                .addItem(new BottomNavigationItem(R.drawable.main, "推广").setInactiveIconResource(R.drawable.main).setActiveColor(Color.WHITE))
                 .addItem(new BottomNavigationItem(R.drawable.main, "我的").setInactiveIconResource(R.drawable.main).setActiveColor("#1E88E5").setBadgeItem(numberBadgeItem))
                 .setFirstSelectedPosition(0) //设置默认选中位置
                 .initialise();  // 提交初始化（完成配置
@@ -327,11 +328,10 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
 //                        R.anim.slide_right_in,
 //                        R.anim.slide_right_out
 //                );
-        if (fragment.isAdded()) {
-            return;
+        if (!fragment.isAdded()) {
+            transaction.replace(R.id.main_layout_take_place, fragment);
+            transaction.commitAllowingStateLoss();
         }
-        transaction.replace(R.id.main_layout_take_place, fragment);
-        transaction.commit();
     }
 
     private void removeFragment(@NonNull Fragment fragment) {
@@ -339,7 +339,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         FragmentTransaction transaction = manager.beginTransaction();
         if (fragment.isAdded()) {
             transaction.remove(fragment);
-            transaction.commit();
+            transaction.commitAllowingStateLoss();
         }
     }
 
@@ -380,7 +380,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 viewPager2.setAdapter(goodsAdapter);
                 tabLayoutMediator.attach();
             } else {
-                // initCategory(allGoods);
+                initCategory(allGoods);
                 ((CategoryFragment) fragments.get(tableIndex)).notifyData();
             }
             if (dialog_check_stock != null && dialog_check_stock.isShowing()) {
@@ -407,6 +407,11 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 }
             }
         });
+    }
+
+    @Override
+    public void finish() {
+
     }
 
     @Override
@@ -468,27 +473,30 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         }
         switch (position) {
             case 0:
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //隐藏状态栏
                 getWindow().setStatusBarColor(Color.parseColor("#FFA110"));
+                getWindow().setNavigationBarColor(Color.parseColor("#ffa110"));
                 if (currentPosition == 2) {
                     removeFragment(mineFragment);
                 } else if (currentPosition == 1)
                     currentPosition = position;
                 break;
             case 1:
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //隐藏状态栏
                 getWindow().setStatusBarColor(Color.TRANSPARENT);
+                getWindow().setNavigationBarColor(Color.WHITE);
+                if (mineFragment != null)
+                    removeFragment(mineFragment);
                 addFragment(expressFragment);
+                hidePopupView();
                 currentPosition = 1;
                 break;
             case 2:
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //隐藏状态栏
-                getWindow().setStatusBarColor(Color.TRANSPARENT);
-                if (currentPosition == 1)
+                getWindow().setStatusBarColor(Color.parseColor("#1E88E5"));
+                getWindow().setNavigationBarColor(Color.parseColor("#1E88E5"));
+                if (expressFragment != null)
                     removeFragment(expressFragment);
                 addFragment(mineFragment);
                 hidePopupView();
-                currentPosition = position;
+                currentPosition = 2;
                 break;
         }
     }
@@ -682,9 +690,10 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         editor.putBoolean(Constant.IS_USER_LOADED, false);
         editor.apply();
+        getWindow().setStatusBarColor(Color.WHITE);
+        super.onDestroy();
     }
 
     private void hasNewMessage() {
@@ -936,7 +945,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     public void onBackPressed() {
         if (backPressedTimes == 2) {
             if (System.currentTimeMillis() - fistTimeMillis <= 1500) {
-                finish();
+                super.finish();
             } else {
                 backPressedTimes = 1;
             }

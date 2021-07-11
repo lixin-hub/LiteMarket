@@ -1,5 +1,7 @@
 package com.cqut.market.beans;
 
+import org.jetbrains.annotations.NotNull;
+
 public class User {
     private String userName;//账号
     private String password;
@@ -9,6 +11,8 @@ public class User {
     private String nickName;//昵称，名字
     private String id;
     private String addr;//地址
+    private String device_id;//设备id
+
 
     public User() {
     }
@@ -26,6 +30,7 @@ public class User {
         this.addr = addr;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "User{" +
@@ -37,9 +42,17 @@ public class User {
                 ", nickName='" + nickName + '\'' +
                 ", id='" + id + '\'' +
                 ", addr='" + addr + '\'' +
+                ", device_id='" + device_id + '\'' +
                 '}';
     }
 
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
+    }
     public String getPhoneNumber() {
         return phoneNumber;
     }

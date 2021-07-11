@@ -51,9 +51,11 @@ import com.cqut.market.R;
 import com.cqut.market.beans.Order;
 import com.cqut.market.beans.User;
 import com.cqut.market.model.Constant;
+import com.cqut.market.model.DeviceId;
 import com.cqut.market.model.FileUtil;
 import com.cqut.market.model.LoginModel;
 import com.cqut.market.model.NetWorkUtil;
+import com.cqut.market.model.SignUpModel;
 import com.cqut.market.model.UpdateApp;
 import com.cqut.market.model.Util;
 import com.cqut.market.presenter.MineItemPresenter;
@@ -77,6 +79,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
+import static com.cqut.market.model.Util.openWebTo;
 
 public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPresenter> implements MineItemView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -209,17 +212,6 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
     }
 
-    private void openWebTo(WebView webView, String url) {
-        webView.loadUrl(url);
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                webView.loadUrl(url);
-                return true;
-            }
-        });
-    }
-
     private void handleProblemCallback() {
         View back = findViewById(R.id.fragment_mine_problem_callback_back);
         back.setOnClickListener(v -> finish());
@@ -297,7 +289,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         View re_set_head_image = findViewById(R.id.fragment_mine_user_info_set_head_image);
         View bt_login_out = findViewById(R.id.fragment_mine_user_info_login_out);
         findViewById(R.id.fragment_mine_user_info_back).setOnClickListener(v -> finish());
-        Switch switch1 = findViewById(R.id.fragment_mine_switch_vibrate);
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch switch1 = findViewById(R.id.fragment_mine_switch_vibrate);
         boolean vs = sharedPreferences.getBoolean(Constant.VIBRATORABLE, true);
         switch1.setChecked(vs);
         switch1.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -357,6 +349,8 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
                 return;
             }
             AlertDialog.Builder deleteAccountDialogBuilder = MyDialog.getDialog(this, "注销帐号", "帐号：" + userName + "\n" + "将会被注销,包括订单信息和评论等将会被完全清除");
+            deleteAccountDialogBuilder.setIcon(getResources().getDrawable(R.drawable.error, getTheme()));
+
             deleteAccountDialogBuilder.setNegativeButton("再考虑一下", (dialog, which) -> {
 
             });
@@ -428,7 +422,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
             String email = ed_email.getText().toString();
             String phone = ed_phone.getText().toString();
             String qq = ed_qq.getText().toString();
-            if (addr.equals("")||addr.length()<4) {
+            if (addr.equals("") || addr.length() < 4) {
                 text_remin.setText("地址至少4个字");
                 Util.clickAnimator(ed_addr);
                 return;
@@ -453,9 +447,10 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
             editor.apply();
             uploadReceiveGoodDialog = MyDialog.getProgressDialog(this, "正在上传", "请稍候...");
             uploadReceiveGoodDialog.show();
+            SignUpModel.uploadDeviceId(new DeviceId(this).getDeviceUuid(), user.getId());
             getPresenter().uploadUserInfo(user, this);
-    });
-}
+        });
+    }
 
     private void showPopAnimator(int type) {
         image_show_order_pop.setVisibility(View.VISIBLE);
@@ -494,7 +489,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         view_dialog.measure(w, h);
-        int height = getWindowManager().getDefaultDisplay().getHeight();
+        int height = getWindow().getDecorView().getHeight();
         int width = getWindowManager().getDefaultDisplay().getWidth();
         popupWindow_recive_good.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow_recive_good.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
@@ -506,8 +501,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         popupWindow_recive_good.setOnDismissListener(() -> {
             showPopAnimator(1);//进入
         });
-        int y = height / 2;
-        int x = width / 2;
+
         popupWindow_recive_good.showAsDropDown(receive_good_info_parent, 0, px2dp(-height) - receive_good_info_parent.getHeight() - 80, Gravity.NO_GRAVITY);
     }
 
@@ -673,22 +667,23 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         ArrayList<Order> orders_processing = new ArrayList<>();
         ArrayList<Order> orders_cancel = new ArrayList<>();
         ArrayList<Order> orders_completed = new ArrayList<>();
-        for (Order order : orders) {
-            switch (order.getState()) {
-                case STATE_APPLY:
-                    orders_apply.add(order);
-                    break;
-                case STATE_PROCESSING:
-                    orders_processing.add(order);
-                    break;
-                case STATE_CANCEL:
-                    orders_cancel.add(order);
-                    break;
-                case STATE_COMPLETED:
-                    orders_completed.add(order);
-                    break;
+        if (orders != null)
+            for (Order order : orders) {
+                switch (order.getState()) {
+                    case STATE_APPLY:
+                        orders_apply.add(order);
+                        break;
+                    case STATE_PROCESSING:
+                        orders_processing.add(order);
+                        break;
+                    case STATE_CANCEL:
+                        orders_cancel.add(order);
+                        break;
+                    case STATE_COMPLETED:
+                        orders_completed.add(order);
+                        break;
+                }
             }
-        }
         runOnUiThread(() -> {
             if (vpSwipeRefreshLayout != null)
                 vpSwipeRefreshLayout.setRefreshing(false);
@@ -742,7 +737,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
                     if (ContextCompat.checkSelfPermission(ShowMineItemActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(ShowMineItemActivity.this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE);
                     } else {
-                        callPhone("15823626029");
+                        callPhone(Constant.MY_PHONE_NUMBER);
                     }
                 });
                 builder.setNegativeButton("查看订单", (dialog, which) -> {
@@ -858,7 +853,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
             }
         } else if (requestCode == CALL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                callPhone("15823626029");
+                callPhone(Constant.MY_PHONE_NUMBER);
             } else {
                 MyDialog.showToast(this, "没有权限，如果想联系我们请在 我的->About里面找到联系方式");
             }

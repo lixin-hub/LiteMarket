@@ -26,12 +26,12 @@
 
         <EditText
             android:id="@+id/message_input"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="30dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="5"
             android:background="@drawable/comment_input_background"
@@ -41,15 +41,13 @@
 
         <Button
             android:id="@+id/message_bt_send"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
-            android:layout_weight="2"
-            android:background="@drawable/bt_apply_comment_background"
-            android:text="发送"
+            android:background="@drawable/get_into_phone"
             android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>

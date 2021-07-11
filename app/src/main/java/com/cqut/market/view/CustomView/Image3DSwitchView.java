@@ -280,13 +280,10 @@ public class Image3DSwitchView extends ViewGroup {
         mScroller.startScroll(startX, startY, dx, dy, duration);
         invalidate();
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (action == SCROLL_NEXT || action == SCROLL_PREVIOUS) {
-                    forceToRelayout = true;
-                    requestLayout();
-                }
+        handler.postDelayed(() -> {
+            if (action == SCROLL_NEXT || action == SCROLL_PREVIOUS) {
+                forceToRelayout = true;
+                requestLayout();
             }
         }, duration);
     }

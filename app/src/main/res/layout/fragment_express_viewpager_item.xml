@@ -12,50 +12,41 @@
         android:longClickable="true"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/message_activity_image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="240dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/china_mobile" />
 
-                <ImageView
-                    android:id="@+id/message_activity_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="240dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/back_item" />
+            <TextView
+                android:id="@+id/message_activity_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/message_activity_image"
+                android:layout_gravity="start"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:text="详情"
+                android:textColor="#E9000000"
+                android:textSize="15dp" />
 
-                <TextView
-                    android:id="@+id/message_activity_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/message_activity_image"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="零食感念"
-                    android:textColor="#E9000000"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/message_activity_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/message_activity_image"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="幸福是什么？幸福是饥饿者手中的面包，是流浪者身上的帐篷，是不幸者内心的向往。陈奕迅在《红玫瑰》中唱道：得不到的永远在骚动，被偏爱的都有持无恐。今日提着手中的一大袋零食的时候，不禁掩面覆泪。
-
-　　并不是因为零食而感动，而是想起在家母亲时常为我买一大堆零食，我总觉得这是理所当然，丝毫不会去珍惜。记得三下乡前我回了趟家，我妈妈是个闲不住的人，一大早给我们做好早餐，便出门找同村的媳妇儿唠嗑去了，我在家坐在电视机前频繁地换台，郁闷的情绪越积越高涨，心想：难得我回一次家，妈妈也不陪陪我。于是自己骑着小电动到集市外晃荡。一回到家，发现弟弟到处在找我，手里提着一大袋零食。弟弟说：妈妈怕你无聊，给你买了一堆你爱吃的零食。妈妈不擅长交流，而是选择另一种陪伴的形式。(经典语录大全 www.wenzhangba.com)
-
-　　能有幸出校购物，是源于昨日心血来潮，应调研组组长邀约，决定今日随同调研小组一起到镇上进行问卷调查。这是下乡的第四天，作为好动一族，早就希望有这么一个机会去参观林尘镇，并且作为一个吃货，对外面的零食垂涎已久。刚吃完早饭，还下着蒙蒙小雨，一群人就趿拉着拖鞋踏着黄泥地往小镇方向走去。四十分钟的路程并没有很煎熬，大家一路闲聊，哼着小曲很快到达。因为语言不通，我被安排拍照。刚开始的时候，大家还比较拘谨，我抱着初生犊不怕虎的精神，首当其冲走进店铺。许多老板表示出不耐烦的表情，我们试图用一些简单的语句让他们放轻松，最终他们提起了兴趣，给我们提供了许多有用的信息。都说恋爱是前世三百次的回眸加一次擦肩而过才能走在一起，那与陌生人之间的交集也是靠主动才有话题。
-
-　　有人说，你来人间一趟，你要看看太阳。那我先说，你来三下乡一趟，你要学会感恩和付出。
-
-　　撰稿人/陈冰冰" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/message_activity_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/message_activity_image"
+                android:layout_gravity="start"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:text="" />
+        </LinearLayout>
     </LinearLayout>
 
 

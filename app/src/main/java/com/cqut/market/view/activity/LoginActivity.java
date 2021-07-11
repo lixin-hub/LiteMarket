@@ -15,9 +15,13 @@ import androidx.annotation.Nullable;
 import com.cqut.market.R;
 import com.cqut.market.beans.User;
 import com.cqut.market.model.Constant;
+import com.cqut.market.model.DeviceId;
+import com.cqut.market.model.NetWorkUtil;
 import com.cqut.market.presenter.LoginPresenter;
 import com.cqut.market.view.CustomView.MyDialog;
 import com.cqut.market.view.LoginView;
+
+import java.util.UUID;
 
 public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> implements LoginView {
 

@@ -14,7 +14,7 @@ public class Image3DView extends androidx.appcompat.widget.AppCompatImageView {
     /**
      * 旋转角度的基准值
      */
-    private static final float BASE_DEGREE = 50f;
+    private static final float BASE_DEGREE = 5f;
     /**
      * 旋转深度的基准值
      */

@@ -42,9 +42,10 @@ public class Constant {
     public static final String SEND_MESSAGE_SUCCESS = "-1800";
     public static final String MESSAGE_NONE = "-1900";//没有消息
     public static final String VIBRATORABLE = "vibrateable";//允许震动
-    public static final long LUNCH_TIME = 0;//启动时间
+    public static final long LUNCH_TIME = 500;//启动时间
     public static final String BING_PIC = "bing_pic";
     public static final String DAY = "day";//日期 、判断是不是新的一天，
+    public static final String MY_PHONE_NUMBER = "15823626029";
     public static List<Order> orders = new ArrayList<>();//缓存
     public static User user;//缓存
     public static String MY_MARKET_NAME = "MY_MARKET";//本地数据表名称
@@ -52,6 +53,7 @@ public class Constant {
     public static boolean NETWORK_INFO;
     public static String USER_NAME = "userName";
     public static String PASSWORD = "password";
+    public static String DEVICE_ID = "device_id";
     public static String PHONE_NUMBER = "phoneNumber";
     public static String QQ_NUMBER = "qqNumber";
     public static String ADDR = "addr";
@@ -84,6 +86,8 @@ public class Constant {
     public static final String VERIFICATION_PHONE_FAILURE = "-2500";
     public static final String SEND_MAIL_FAILED = "-2600";
     public static final String SEND_MAIL_SUCCESS = "-2700";
+    public static final String VERIFICATION_PHONE_AND_UUID_SUCCESS = "-2800";
+
 
     public static String EXTERNAL_STORAGE;
     public static int ANIMATOR_IN = 1;

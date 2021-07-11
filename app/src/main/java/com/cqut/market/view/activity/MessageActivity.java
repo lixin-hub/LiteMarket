@@ -82,6 +82,8 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             //设置状态栏的颜色F
             getWindow().setStatusBarColor(Color.parseColor("#C4D1D5"));
+            setHideStatueBar();
+            getWindow().setNavigationBarColor(Color.parseColor("#C4D1D5"));
             setContentView(R.layout.activity_message);
             Toolbar toolbar = findViewById(R.id.activity_message_toolbar);
             setSupportActionBar(toolbar);
@@ -124,7 +126,7 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
             });
             keybord_image.setOnClickListener((v) -> {
                 Util.vibrator(this, 50);
-                navigationAnimator(Constant.ANIMATOR_OUT, more_visibility);
+                 navigationAnimator(Constant.ANIMATOR_OUT, more_visibility);
                 navigationAnimator(Constant.ANIMATOR_IN, keybord_visibility);
             });
             bt_send.setOnClickListener(v -> {
@@ -248,14 +250,14 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
                     if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE);
                     } else {
-                        callPhone("15823626029");
+                        callPhone(Constant.MY_PHONE_NUMBER);
                     }
                     break;
                 case R.id.qq:
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Constant.QQ_URL)));
                     break;
                 case R.id.qq_group:
-                    joinQQGroup(Constant.QQ_KEY);
+                   Util.joinQQGroup(this,Constant.QQ_KEY);
                     break;
                 case R.id.weixin:
                     getWechatApi();
@@ -282,18 +284,7 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
         }
     }
 
-    public boolean joinQQGroup(String key) {
-        Intent intent = new Intent();
-        intent.setData(Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3D" + key));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        try {
-            startActivity(intent);
-            return true;
-        } catch (Exception e) {
-            MyDialog.showToast(this, "未安装手Q或安装的版本不支持");
-            return false;
-        }
-    }
+
 
     private void callPhone(String phone) {
         Intent intent = new Intent(Intent.ACTION_CALL);
@@ -304,13 +295,16 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
     private void navigationAnimator(int type, View view) {
         view.setVisibility(View.VISIBLE);
         float start = 0, end = 0;
-        int screenHeight;
+        int screenHeight=getWindow().getDecorView().getHeight();
         float var;
-        screenHeight = getWindow().getDecorView().getHeight();
+        boolean hasNavigationBar = Util.isNavigationBarShow(this);
+        if (hasNavigationBar){
+            int navigationBarHeight = Util.getNavigationBarHeight(this);
+            screenHeight=screenHeight-navigationBarHeight;
+        }
         if (type == Constant.ANIMATOR_IN) {
             start = screenHeight;
             end = screenHeight - view.getHeight();
-
         } else {
             start = screenHeight - view.getHeight();
             end = screenHeight;
@@ -319,9 +313,10 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(start, end);
         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         valueAnimator.setDuration(300);
+        int finalScreenHeight = screenHeight;
         valueAnimator.addUpdateListener(animation -> {
             float alpha;
-            float value = (float) valueAnimator.getAnimatedValue() - screenHeight;
+            float value = (float) valueAnimator.getAnimatedValue() - finalScreenHeight;
             view.setY((float) valueAnimator.getAnimatedValue());
             alpha = (value / var) * 100;
             view.setAlpha(Math.abs(alpha));
@@ -330,8 +325,10 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
         valueAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (type == Constant.ANIMATOR_OUT)
-                    view.setVisibility(View.INVISIBLE);
+                if (type == Constant.ANIMATOR_OUT){
+                    view.setVisibility(View.GONE);
+                    view.invalidate();
+                }
             }
         });
         valueAnimator.start();
@@ -394,7 +391,7 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == CALL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                callPhone("15823626029");
+                callPhone(Constant.MY_PHONE_NUMBER);
             } else {
                 MyDialog.showToast(this, "没有权限，如果想联系我们请在 我的->About里面找到联系方式");
             }

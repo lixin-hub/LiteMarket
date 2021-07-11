@@ -44,6 +44,10 @@ public class JsonUtil {
             String addr = userD.getString("addr");
             user.setAddr(addr);
         }
+        if (userD.has("device_id")) {
+            String device_id = userD.getString("device_id");
+            user.setDevice_id(device_id);
+        }
         return user;
     }
 

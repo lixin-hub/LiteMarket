@@ -41,20 +41,9 @@
 #保持泛型
 -keepattributes Signature
 
-#保持所有实现 Serializable 接口的类成员
--keepclassmembers class * implements java.io.Serializable {
-    static final long serialVersionUID;
-    private static final java.io.ObjectStreamField[] serialPersistentFields;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
-}
-
 #Fragment不需要在AndroidManifest.xml中注册，需要额外保护下
 -keep public class * extends androidx.fragment.app.Fragment
 -keep public class * extends android.app.Fragment
-
 # 保持测试相关的代码
 -dontnote junit.framework.**
 -dontnote junit.runner.**

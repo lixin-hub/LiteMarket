@@ -5,7 +5,7 @@
     "kind": "Directory"
   },
   "applicationId": "com.cqut.market",
-  "variantName": "processReleaseResources",
+  "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",

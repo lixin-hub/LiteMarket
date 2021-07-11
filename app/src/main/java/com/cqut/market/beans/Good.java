@@ -1,8 +1,5 @@
 package com.cqut.market.beans;
 
-
-import com.sun.mail.imap.protocol.ID;
-
 public class Good {
 
 

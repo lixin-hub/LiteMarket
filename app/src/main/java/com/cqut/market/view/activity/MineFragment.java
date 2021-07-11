@@ -4,13 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -37,6 +34,7 @@ import com.cqut.market.view.MineView;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -87,8 +85,12 @@ public class MineFragment extends Fragment implements MineView, View.OnClickList
         clear.setOnClickListener(this);
         about.setOnClickListener(this);
         Bitmap bitmap = FileUtil.getHeadImage(this.getContext());
-        if (bitmap != null)
+        if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.INVISIBLE);
+        }
         isNewMessage();
         return view;
     }
@@ -148,13 +150,14 @@ public class MineFragment extends Fragment implements MineView, View.OnClickList
             text_nickName.setText("怎么称呼您?");
         else text_nickName.setText(nickName);
         String path_pic = preferences.getString(Constant.BING_PIC, null);
-        if (path_pic!=null){
+        if (path_pic != null) {
             Glide.with(getContext()).load(path_pic).into(image_background);
-        }else {
+        } else {
             NetWorkUtil.sendRequest("http://guolin.tech/api/bing_pic", new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 }
+
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     String path = response.body().string();
@@ -257,6 +260,7 @@ public class MineFragment extends Fragment implements MineView, View.OnClickList
                     editor.putString(Constant.PHONE_NUMBER, user.getPhoneNumber());
                     editor.putString(Constant.EMAIL, user.getEmail());
                     editor.putString(Constant.ADDR, user.getAddr());
+                    editor.putString(Constant.USER_ID, user.getId());
                     editor.apply();
                 }
             });
@@ -302,7 +306,7 @@ public class MineFragment extends Fragment implements MineView, View.OnClickList
 
     private void showPopNickName() {
         View view = LayoutInflater.from(this.getActivity()).inflate(R.layout.fragment_mine_nickname, null);
-        setNickNameDialog = new AlertDialog.Builder(getContext())
+        setNickNameDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
                 .setView(view)
                 .setCancelable(true)
                 .create();
@@ -335,8 +339,12 @@ public class MineFragment extends Fragment implements MineView, View.OnClickList
         if (!nick.equals("-1"))
             text_nickName.setText(nick);
         Bitmap bitmap = FileUtil.getHeadImage(this.getContext());
-        if (bitmap != null)
+        if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.INVISIBLE);
+        }
         String cacheSize = FileUtil.getCacheSize(this.getContext());
         if (cacheSize != null)
             cache_size.setText(cacheSize + "");

@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import com.cqut.market.R;
 import com.cqut.market.beans.User;
 import com.cqut.market.model.Constant;
+import com.cqut.market.model.DeviceId;
+import com.cqut.market.model.SignUpModel;
 import com.cqut.market.presenter.SignUpPresenter;
 import com.cqut.market.view.CustomView.MyDialog;
 import com.cqut.market.view.SignUpView;
@@ -52,7 +54,6 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
             case 2://免验证
                 signupYouKeView();
                 break;
-
         }
     }
 
@@ -129,12 +130,9 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
             getPresenter().sendCheckCode(username, new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            bt_check_code.setEnabled(true);
-                            MyDialog.showToast(SignUpActivity.this, "发送失败");
-                        }
+                    runOnUiThread(() -> {
+                        bt_check_code.setEnabled(true);
+                        MyDialog.showToast(SignUpActivity.this, "发送失败");
                     });
                 }
 
@@ -174,15 +172,18 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
                                         }
                                     }
                                 }, 0, 1000);
+                            } else if (responseCode.equals(Constant.USER_EXISTED)) {
+                                MyDialog.showToast(SignUpActivity.this, "该邮箱已经注册");
+                                bt_check_code.setEnabled(true);
                             } else {
                                 MyDialog.showToast(SignUpActivity.this, "发送失败");
+                                bt_check_code.setEnabled(true);
                             }
                         }
                     });
 
                 }
             });
-
         });
         bt_signup.setOnClickListener(v -> {
             String username = ed_username.getText().toString().trim();
@@ -245,6 +246,7 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
         }
         if (code.equals(Constant.SIGNUP_SUCCESS)) {
             if (user != null) {
+                SignUpModel.uploadDeviceId(new DeviceId(SignUpActivity.this).getDeviceUuid(), user.getId());
                 MyDialog.showToast(this, "注册成功");
                 Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                 intent.putExtra("userName", user.getUserName());

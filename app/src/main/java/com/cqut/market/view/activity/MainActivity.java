@@ -15,6 +15,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,6 +86,7 @@ import static com.ashokvarma.bottomnavigation.BottomNavigationBar.MODE_FIXED;
 import static com.cqut.market.model.Util.clickAnimator;
 
 public class MainActivity extends BaseActivity<MainView, MainPresenter> implements MainView, View.OnFocusChangeListener, BottomNavigationBar.OnTabSelectedListener, TextWatcher, SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+    private static final String TAG = "MainActivity"+"DEBUGE";
     private final ArrayList<Image3DView> images = new ArrayList<>();
     private final ArrayList<Order> orders = new ArrayList<>();
     private final ArrayList<Fragment> fragments = new ArrayList<>();
@@ -92,20 +94,20 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     public SharedPreferences.Editor editor;
     ArrayList<String> strings = new ArrayList<>();
     ArrayList<Good> currentGoods;
-    ArrayList<Good> 全部 = new ArrayList<>();
-    ArrayList<Good> 零食 = new ArrayList<>();
-    ArrayList<Good> 早餐 = new ArrayList<>();
-    ArrayList<Good> 日用 = new ArrayList<>();
-    ArrayList<Good> 快递 = new ArrayList<>();
-    ArrayList<Good> 酒饮 = new ArrayList<>();
-    ArrayList<Good> 速食 = new ArrayList<>();
-    CategoryFragment e1 = new CategoryFragment(零食);
-    CategoryFragment e2 = new CategoryFragment(快递);
-    CategoryFragment e3 = new CategoryFragment(早餐);
-    CategoryFragment e4 = new CategoryFragment(速食);
-    CategoryFragment e5 = new CategoryFragment(日用);
-    CategoryFragment e6 = new CategoryFragment(酒饮);
-    CategoryFragment e = new CategoryFragment(全部);
+    ArrayList<Good> quanbu = new ArrayList<>();
+    ArrayList<Good> lingshi = new ArrayList<>();
+    ArrayList<Good> zhaichan = new ArrayList<>();
+    ArrayList<Good> riyong = new ArrayList<>();
+    ArrayList<Good> kuaidi = new ArrayList<>();
+    ArrayList<Good> jiuying = new ArrayList<>();
+    ArrayList<Good> shushi = new ArrayList<>();
+    CategoryFragment lingshiF = new CategoryFragment(lingshi);
+    CategoryFragment kuaidiF = new CategoryFragment(kuaidi);
+    CategoryFragment zhaichanF = new CategoryFragment(zhaichan);
+    CategoryFragment shushiF = new CategoryFragment(shushi);
+    CategoryFragment riyongF = new CategoryFragment(riyong);
+    CategoryFragment jiuyingF = new CategoryFragment(jiuying);
+    CategoryFragment quanbuF = new CategoryFragment(quanbu);
     private ArrayList<Good> allGoods = new ArrayList<>();
 
     private ArrayList<String> orderedList;//加入购物车的商品
@@ -235,27 +237,28 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tableIndex = tab.getPosition();
+
                 switch (tableIndex) {
                     case 0:
-                        currentGoods = allGoods;
+                        currentGoods = quanbu;
                         break;
                     case 1:
-                        currentGoods = 零食;
+                        currentGoods = lingshi;
                         break;
                     case 2:
-                        currentGoods = 早餐;
+                        currentGoods = zhaichan;
                         break;
                     case 3:
-                        currentGoods = 日用;
+                        currentGoods = riyong;
                         break;
                     case 4:
-                        currentGoods = 快递;
+                        currentGoods = kuaidi;
                         break;
                     case 5:
-                        currentGoods = 酒饮;
+                        currentGoods = jiuying;
                         break;
                     case 6:
-                        currentGoods = 速食;
+                        currentGoods = shushi;
                         break;
                 }
             }
@@ -273,46 +276,48 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
 
     private void initCategory(ArrayList<Good> goods) {
         fragments.clear();
-        零食.clear();
-        快递.clear();
-        早餐.clear();
-        速食.clear();
-        日用.clear();
-        酒饮.clear();
-        全部.clear();
-        全部.addAll(goods);
+        lingshi.clear();
+        kuaidi.clear();
+        zhaichan.clear();
+        shushi.clear();
+        riyong.clear();
+        jiuying.clear();
+        quanbu.clear();
+        quanbu.addAll(goods);
+        Log.e(TAG, "initCategory: 全部："+ quanbu.hashCode());
+
         for (Good good : goods) {
             switch (Integer.parseInt(good.getCategory())) {
-                case GoodCategory.零食:
-                    零食.add(good);
+                case GoodCategory.lingshi:
+                    lingshi.add(good);
                     break;
-                case GoodCategory.快递:
-                    快递.add(good);
+                case GoodCategory.kuaidi:
+                    kuaidi.add(good);
                     break;
-                case GoodCategory.早餐:
-                    早餐.add(good);
+                case GoodCategory.zhaochan:
+                    zhaichan.add(good);
                     break;
-                case GoodCategory.速食:
-                    速食.add(good);
+                case GoodCategory.shushi:
+                    shushi.add(good);
                     break;
-                case GoodCategory.日用:
-                    日用.add(good);
+                case GoodCategory.riyong:
+                    riyong.add(good);
                     break;
-                case GoodCategory.酒饮:
-                    酒饮.add(good);
+                case GoodCategory.jiuying:
+                    jiuying.add(good);
                     break;
                 default:
                     break;
             }
         }
 
-        fragments.add(e);
-        fragments.add(e1);
-        fragments.add(e2);
-        fragments.add(e3);
-        fragments.add(e4);
-        fragments.add(e5);
-        fragments.add(e6);
+        fragments.add(quanbuF);
+        fragments.add(lingshiF);
+        fragments.add(zhaichanF);
+        fragments.add(riyongF);
+        fragments.add(kuaidiF);
+        fragments.add(jiuyingF);
+        fragments.add(shushiF);
     }
 
     @Override
@@ -853,6 +858,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
             Collections.sort(currentGoods, (o1, o2) -> (int) (o2.getPrice() * 100 - o1.getPrice() * 100));
             ((CategoryFragment) fragments.get(tableIndex)).notifyData();
             clickAnimator(text_down);
+            Log.e(TAG, "popupWindowToPrice: "+currentGoods.toString());
         });
         text_up.setOnClickListener(v -> {
             Collections.sort(currentGoods, (o1, o2) -> (int) (o1.getPrice() * 100 - o2.getPrice() * 100));

@@ -99,7 +99,7 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
         ed_check_code = findViewById(R.id.signup_inout_checkcode);
         bt_check_code = findViewById(R.id.signup_send_check_code);
         bt_check_code.setOnClickListener(v -> {
-            bt_check_code.setEnabled(false);
+
             String username = ed_username.getText().toString().trim();
             String password = ed_password.getText().toString().trim();
             String password_again = ed_password_again.getText().toString().trim();
@@ -127,6 +127,7 @@ public class SignUpActivity extends BaseActivity<SignUpView, SignUpPresenter> im
                 Toast.makeText(SignUpActivity.this, "密码至少6位", Toast.LENGTH_SHORT).show();
                 return;
             }
+            bt_check_code.setEnabled(false);
             getPresenter().sendCheckCode(username, new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {

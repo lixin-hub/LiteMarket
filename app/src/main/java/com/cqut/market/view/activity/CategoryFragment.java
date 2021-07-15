@@ -1,6 +1,7 @@
 package com.cqut.market.view.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
     }
 
     public void notifyData() {
+        Log.e("Fragment", "notifyData: "+allGoods.hashCode() );
         if (goodListAdapter != null)
             goodListAdapter.notifyItemRangeChanged(0, allGoods.size());
     }

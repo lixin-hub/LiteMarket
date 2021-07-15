@@ -183,4 +183,7 @@ public class FileUtil {
         return data;
     }
 
+    public static void clearException() {
+        saveData("","uncaughtException.txt");
+    }
 }

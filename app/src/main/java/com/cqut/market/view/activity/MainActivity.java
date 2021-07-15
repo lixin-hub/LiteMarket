@@ -56,6 +56,7 @@ import com.cqut.market.R;
 import com.cqut.market.beans.Good;
 import com.cqut.market.beans.Order;
 import com.cqut.market.model.Constant;
+import com.cqut.market.model.FileUtil;
 import com.cqut.market.model.GoodCategory;
 import com.cqut.market.model.MessageModel;
 import com.cqut.market.model.NetWorkUtil;
@@ -74,6 +75,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -81,12 +85,16 @@ import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
 import static com.ashokvarma.bottomnavigation.BottomNavigationBar.BACKGROUND_STYLE_RIPPLE;
 import static com.ashokvarma.bottomnavigation.BottomNavigationBar.MODE_FIXED;
 import static com.cqut.market.model.Util.clickAnimator;
 
 public class MainActivity extends BaseActivity<MainView, MainPresenter> implements MainView, View.OnFocusChangeListener, BottomNavigationBar.OnTabSelectedListener, TextWatcher, SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
-    private static final String TAG = "MainActivity"+"DEBUGE";
+    private static final String TAG = "MainActivity" + "DEBUGE";
     private final ArrayList<Image3DView> images = new ArrayList<>();
     private final ArrayList<Order> orders = new ArrayList<>();
     private final ArrayList<Fragment> fragments = new ArrayList<>();
@@ -272,6 +280,22 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
 
             }
         });
+        String data = FileUtil.getData("uncaughtException.txt");
+        if (data != null && data.length() > 0) {
+            NetWorkUtil.sendRequestAddParms(Constant.HOST_INTERNET + "problem", "uncaughtException", data, new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    FileUtil.clearException();
+                }
+            });
+        }
+
+
     }
 
     private void initCategory(ArrayList<Good> goods) {
@@ -284,8 +308,6 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         jiuying.clear();
         quanbu.clear();
         quanbu.addAll(goods);
-        Log.e(TAG, "initCategory: 全部："+ quanbu.hashCode());
-
         for (Good good : goods) {
             switch (Integer.parseInt(good.getCategory())) {
                 case GoodCategory.lingshi:
@@ -858,7 +880,6 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
             Collections.sort(currentGoods, (o1, o2) -> (int) (o2.getPrice() * 100 - o1.getPrice() * 100));
             ((CategoryFragment) fragments.get(tableIndex)).notifyData();
             clickAnimator(text_down);
-            Log.e(TAG, "popupWindowToPrice: "+currentGoods.toString());
         });
         text_up.setOnClickListener(v -> {
             Collections.sort(currentGoods, (o1, o2) -> (int) (o1.getPrice() * 100 - o2.getPrice() * 100));

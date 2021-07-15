@@ -1,7 +1,6 @@
 package com.cqut.market.view.activity;
 
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -15,9 +14,6 @@ import com.cqut.market.model.Constant;
 import com.cqut.market.model.NetWorkUtil;
 import com.cqut.market.presenter.BasePresenter;
 import com.cqut.market.view.BaseView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V>> extends AppCompatActivity {
     private P presenter;
@@ -36,17 +32,18 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
         Constant.EXTERNAL_STORAGE = getExternalCacheDir().getAbsolutePath();
     }
 
-   protected void setHideStatueBar(){
-       Window window = getWindow();
-       //设置修改状态栏
-       window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-       window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-       //设置状态栏的颜色
-       window.setStatusBarColor(Color.TRANSPARENT);
+    protected void setHideStatueBar() {
+        Window window = getWindow();
+        //设置修改状态栏
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //设置状态栏的颜色
+        window.setStatusBarColor(Color.TRANSPARENT);
 //       getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
 //       getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //显示状态栏
 
-   }
+    }
+
     protected abstract P createPresenter();
 
     protected abstract V createView();

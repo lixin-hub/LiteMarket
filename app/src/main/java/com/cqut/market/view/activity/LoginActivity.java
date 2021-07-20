@@ -16,7 +16,7 @@ import com.cqut.market.R;
 import com.cqut.market.beans.User;
 import com.cqut.market.model.Constant;
 import com.cqut.market.model.DeviceId;
-import com.cqut.market.model.NetWorkUtil;
+import com.cqut.market.model.SignUpModel;
 import com.cqut.market.presenter.LoginPresenter;
 import com.cqut.market.view.CustomView.MyDialog;
 import com.cqut.market.view.LoginView;
@@ -100,6 +100,8 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
 
     @Override
     public void onLoginResult(User user, String code) {
+        if (loginDialog != null && loginDialog.isShowing())
+            loginDialog.dismiss();
         if (code.equals(Constant.CONNECT_FAILED)) {
             MyDialog.showToast(this, "连接异常");
             return;
@@ -110,10 +112,12 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
         if (code.equals(Constant.CONTENT_ERROR)) {
             MyDialog.showToast(this, "密码或用户名错误");
         }
-        if (loginDialog != null && loginDialog.isShowing())
-            loginDialog.dismiss();
+
         if (code.equals(Constant.LOGIN_SUCCESS)) {
             if (user != null) {
+                UUID deviceUuid = new DeviceId(this).getDeviceUuid();
+                user.setDevice_id(deviceUuid.toString());
+                SignUpModel.uploadDeviceId(deviceUuid, user.getId());
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.putExtra("userName", user.getUserName());
                 intent.putExtra("password", user.getPassword());

@@ -15,7 +15,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,7 +93,7 @@ import static com.ashokvarma.bottomnavigation.BottomNavigationBar.MODE_FIXED;
 import static com.cqut.market.model.Util.clickAnimator;
 
 public class MainActivity extends BaseActivity<MainView, MainPresenter> implements MainView, View.OnFocusChangeListener, BottomNavigationBar.OnTabSelectedListener, TextWatcher, SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
-    private static final String TAG = "MainActivity" + "DEBUGE";
+//    private static final String TAG = "MainActivity" + "DEBUGE";
     private final ArrayList<Image3DView> images = new ArrayList<>();
     private final ArrayList<Order> orders = new ArrayList<>();
     private final ArrayList<Fragment> fragments = new ArrayList<>();
@@ -119,7 +118,6 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     private ArrayList<Good> allGoods = new ArrayList<>();
 
     private ArrayList<String> orderedList;//加入购物车的商品
-    private Button bt_oder_apply;
     private TextView text_total_money;
     private FloatingActionButton bt_order_info;
     private Image3DSwitchView image3DSwitchView;
@@ -135,7 +133,6 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     private PopupWindow popupWindow;
     private SwipeRefreshLayout refreshLayout;
     private LinearLayout dialog_info_image_background;
-    private Button bt_oderByPrice, bt_orderBySales;
     private EditText ed_search_box;
     private int backPressedTimes = 1;
     private FrameLayout frameLayout_visibility;
@@ -145,7 +142,6 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     private String userId;
     private MineFragment mineFragment;
     private ExpressFragment expressFragment;
-    private BottomNavigationBar bottomNavigationBar;
     private ProgressDialog progressDialog_check_order_counts;
     private TextBadgeItem numberBadgeItem;
     private Button bt_clear_all_order;
@@ -191,8 +187,8 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         ed_search_box.setOnFocusChangeListener(this);
         ed_search_box.setOnClickListener(Util::clickAnimator);
         listenKeyboardVisible();
-        bt_oderByPrice = findViewById(R.id.order_by_price);
-        bt_orderBySales = findViewById(R.id.order_by_sales);
+        Button bt_oderByPrice = findViewById(R.id.order_by_price);
+        Button bt_orderBySales = findViewById(R.id.order_by_sales);
         bt_orderBySales.setOnClickListener(this);
         bt_oderByPrice.setOnClickListener(this);
         editor.putBoolean(Constant.IS_USER_LOADED, false);
@@ -206,7 +202,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 startActivityForResult(intent, Constant.REQUESTCODE_ORDER);
             });
         }
-        bottomNavigationBar = findViewById(R.id.bottomNavigationBar);
+        BottomNavigationBar bottomNavigationBar = findViewById(R.id.bottomNavigationBar);
         refreshLayout.post(() -> {
             refreshLayout.setRefreshing(true);
             getPresenter().requestGoodsData();
@@ -238,9 +234,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         strings.add("快递");
         strings.add("酒饮");
         strings.add("速食");
-        tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
-            tab.setText(strings.get(position));
-        });
+        tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText(strings.get(position)));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -282,14 +276,14 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         });
         String data = FileUtil.getData("uncaughtException.txt");
         if (data != null && data.length() > 0) {
-            NetWorkUtil.sendRequestAddParms(Constant.HOST_INTERNET + "problem", "uncaughtException", data, new Callback() {
+            NetWorkUtil.sendRequestAddParms(Constant.HOST + "problem", "uncaughtException", data, new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
                 }
 
                 @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                public void onResponse(@NotNull Call call, @NotNull Response response) {
                     FileUtil.clearException();
                 }
             });
@@ -558,7 +552,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         return bg.floatValue();
     }
 
-    @SuppressLint("NonConstantResourceId")
+    @SuppressLint({"NonConstantResourceId", "SetTextI18n"})
     @Override
     public void onClick(View v) {
         GoodListAdapter.ViewHolder goodHolder;
@@ -569,7 +563,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 String mid = (String) v.getTag();
                 Intent intent = new Intent(this, OrderActivity.class);
                 intent.putExtra("id", "" + mid);
-                intent.putExtra("isSlected", orderedList.indexOf(mid) >= 0);
+                intent.putExtra("isSlected", orderedList.contains(mid));
                 startActivityForResult(intent, Constant.REQUESTCODE_ORDER);
                 break;
             case R.id.goods_item_add:
@@ -724,22 +718,20 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     }
 
     private void hasNewMessage() {
-        MessageModel.hasNewMessage(userId, count -> {
-            runOnUiThread(() -> {
-                if (count > 0) {
-                    int local = Constant.getLocalMessages().size();
-                    if (local < count) {
-                        numberBadgeItem.show();
-                        numberBadgeItem.setText(count - local + "");
-                        editor.putInt(Constant.NEW_MESSAGE_COUNT, count - local);
-                    } else {
-                        numberBadgeItem.hide();
-                        editor.putInt(Constant.NEW_MESSAGE_COUNT, 0);
-                    }
-                    editor.apply();
+        MessageModel.hasNewMessage(userId, count -> runOnUiThread(() -> {
+            if (count > 0) {
+                int local = Constant.getLocalMessages().size();
+                if (local < count) {
+                    numberBadgeItem.show();
+                    numberBadgeItem.setText(count - local + "");
+                    editor.putInt(Constant.NEW_MESSAGE_COUNT, count - local);
+                } else {
+                    numberBadgeItem.hide();
+                    editor.putInt(Constant.NEW_MESSAGE_COUNT, 0);
                 }
-            });
-        });
+                editor.apply();
+            }
+        }));
 
     }
 
@@ -838,7 +830,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         text_look_look.setOnClickListener(v -> bt_order_info.callOnClick());
         text_look_look.getPaint().setAntiAlias(true);
         text_look_look.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-        bt_oder_apply = view.findViewById(R.id.dialog_info_bt_apply);
+        Button bt_oder_apply = view.findViewById(R.id.dialog_info_bt_apply);
         bt_oder_apply.setOnClickListener(this);
         text_total_money = view.findViewById(R.id.dialog_info_text_total_money);
         dialog_info_image_background = view.findViewById(R.id.dialog_info_background);
@@ -935,10 +927,10 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         return goods;
     }
 
-    public int px2dp(float pxValue) {
+ /*   public int px2dp(float pxValue) {
         float density = getResources().getDisplayMetrics().density;
         return (int) (pxValue / density + 0.5f);
-    }
+    }*/
 
     public int dp2px(float dpValue) {
         float density = getResources().getDisplayMetrics().density;
@@ -949,6 +941,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constant.REQUESTCODE_ORDER && resultCode == RESULT_OK) {
+            assert data != null;
             String id = data.getStringExtra("id");
             boolean isSlected = data.getBooleanExtra("isSlected", false);
             if (isSlected)
@@ -1042,18 +1035,17 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
 
     static class BottomOffsetDecoration extends RecyclerView.ItemDecoration {
         private final int mBottomOffset;
-        private final boolean isFirstRefresh = true;
-
         public BottomOffsetDecoration(int bottomOffset) {
             mBottomOffset = bottomOffset;
         }
 
         @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
             super.getItemOffsets(outRect, view, parent, state);
             int dataSize = state.getItemCount();
             int position = parent.getChildAdapterPosition(view);
             StaggeredGridLayoutManager gard = (StaggeredGridLayoutManager) parent.getLayoutManager();
+            assert gard != null;
             if ((dataSize - position) <= gard.getSpanCount()) {
                 int height = gard.getBottomDecorationHeight(view);
                 if (mBottomOffset > height)

@@ -12,7 +12,7 @@ import okhttp3.Response;
 public class Constant {
     public static final String HOST_LOCAL = "http://192.168.43.245:8088/LiteMarket/";
     public static final String HOST_INTERNET = "https://3j4m729509.goho.co/LiteMarket/";
-    public static final String HOST = HOST_INTERNET;
+    public static final String HOST = HOST_LOCAL;
     public static final String QQ_KEY = "QcaiDn5ut1HzdJKL-A9UJR0EhZ__5_EN";
     public static final String QQ_URL = "mqqwpa://im/chat?chat_type=wpa&uin=763819849&version=1";
     public static final String IS_USER_LOADED = "isLoaded";//是否加载了用户信息
@@ -60,7 +60,7 @@ public class Constant {
     public static String EMAIL = "email";
     public static String NICK_NAME = "nickName";
     public static String LAST_LOGIN_TIME = "lastTime";//上次登录时间，超过几天失效
-    public static long INVALID_TIME = 1000 * 60 * 60 * 24 * 1;//三天登录失效
+    public static long INVALID_TIME = 1000 * 60 * 60 * 24;//三天登录失效
     public static String LAST_GOOD_IMAGE_UPDATE_TIME = "imageUpdateTime";//一天
     public static final String NEW_MESSAGE_COUNT = "countOfNewMessage";
     public static long GOOD_IMAGE_UPDATE_TIME = 1000 * 60 * 60*24;//一分钟
@@ -87,6 +87,7 @@ public class Constant {
     public static final String SEND_MAIL_FAILED = "-2600";
     public static final String SEND_MAIL_SUCCESS = "-2700";
     public static final String VERIFICATION_PHONE_AND_UUID_SUCCESS = "-2800";
+    public static final String VERIFICATION_EMAIL_FAILURE = "-2900";
 
 
     public static String EXTERNAL_STORAGE;

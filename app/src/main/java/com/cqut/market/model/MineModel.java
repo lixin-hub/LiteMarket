@@ -5,8 +5,10 @@ import com.cqut.market.view.MineView;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -23,30 +25,26 @@ public class MineModel {
         }
         NetWorkUtil.sendRequestAddParms(url, "id", id, new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                mineView.OnGetUserInfoFailed(e.getMessage());
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                mineView.OnGetUserInfoFailed("连接失败");
                 getUserInfoInLocal(mineView);
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String jsonstr = response.body().string();
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String jsonstr = Objects.requireNonNull(response.body()).string();
                 String responseCode = JsonUtil.getResponseCode(jsonstr);
                 if (responseCode != null && responseCode.equals(Constant.USER_NOT_EXISTED)) {
                     mineView.OnGetUserInfoFailed("用户不存在，请重新登录");
+                    return;
                 }
-                if (!response.equals(Constant.ORDER_NONE)) {
+                User user = JsonUtil.parseJsonToUser(jsonstr);
+                if (user != null) {
+                    mineView.onGetUserInfoSuccess(user);
                     FileUtil.saveData(jsonstr, "userInfo");
-                    User user = JsonUtil.parseJsonToUser(jsonstr);
-                    if (user != null)
-                        mineView.onGetUserInfoSuccess(user);
-                    else {
-                        getUserInfoInLocal(mineView);
-                        mineView.OnGetUserInfoFailed("user=null，更新失败");
-                    }
                 } else {
                     getUserInfoInLocal(mineView);
-                    mineView.OnGetUserInfoFailed("没有查询到订单额！");
+                    mineView.OnGetUserInfoFailed("解析错误");
                 }
             }
         });
@@ -71,27 +69,24 @@ public class MineModel {
 
         NetWorkUtil.sendRequestAddParms(url, "update", document.toJson(), new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 if (!Constant.NETWORK_INFO)
-                    mainView.onPostUserInfoFailed("网络未连接");
-                else mainView.onPostUserInfoFailed(e.getMessage() + ":" + "失败");
+                    mainView.onPostUserInfoFailed("好像没有接入互联网");
+                else mainView.onPostUserInfoFailed("跑腿的小弟现在可能在开小差，等会试试吧！");
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String jsonstr = response.body().string();
-                if (jsonstr != null) {
-                    String responseCode = JsonUtil.getResponseCode(jsonstr);
-                    if (responseCode == null) {
-                        mainView.onPostUserInfoFailed("更新失败");
-                        return;
-                    }
-
-                    if (responseCode.equals(Constant.UPDATE_SUCCESS))
-                        mainView.onPostUserInfoSuccess();
-                    else
-                        mainView.onPostUserInfoFailed("号码已经存在");
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String jsonstr = Objects.requireNonNull(response.body()).string();
+                String responseCode = JsonUtil.getResponseCode(jsonstr);
+                if (responseCode == null) {
+                    mainView.onPostUserInfoFailed("这次请求没有成功，请重新来一次吧。");
+                    return;
                 }
+                if (responseCode.equals(Constant.UPDATE_SUCCESS))
+                    mainView.onPostUserInfoSuccess();
+                else
+                    mainView.onPostUserInfoFailed("号码已经存在了");
             }
         });
     }

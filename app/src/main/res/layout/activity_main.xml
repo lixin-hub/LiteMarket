@@ -89,11 +89,11 @@
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/fragment_express_tab"
-                        app:tabSelectedTextColor="@color/mainColor"
-                        app:tabIndicatorColor="@color/mainColor"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:layout_gravity="top" />
+                        android:layout_gravity="top"
+                        app:tabIndicatorColor="@color/mainColor"
+                        app:tabSelectedTextColor="@color/mainColor" />
 
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/fragment_express_viewpager"
@@ -119,6 +119,34 @@
             app:fabCustomSize="60dp"
             app:maxImageSize="70dp"
             app:rippleColor="@color/transparent" />
+
+
+        <LinearLayout
+            android:clickable="true"
+            android:orientation="vertical"
+            android:id="@+id/main_activity_mine_order_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="200dp">
+
+            <Button
+                android:id="@+id/bt_mine_order"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:background="@drawable/my_order_background"
+                android:text="我的订单"
+                android:textColor="@color/white" />
+
+            <com.cqut.market.view.CustomView.MyBadge
+                android:visibility="invisible"
+                android:id="@+id/my_badge_order"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="end|top"
+                android:layout_marginEnd="10dp" />
+        </LinearLayout>
+
     </FrameLayout>
 
     <FrameLayout

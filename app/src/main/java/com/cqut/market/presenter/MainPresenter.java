@@ -3,8 +3,6 @@ package com.cqut.market.presenter;
 import android.graphics.Bitmap;
 
 import com.cqut.market.beans.Good;
-import com.cqut.market.beans.Order;
-import com.cqut.market.model.Constant;
 import com.cqut.market.model.JsonUtil;
 import com.cqut.market.model.MainModel;
 import com.cqut.market.view.MainView;
@@ -12,7 +10,6 @@ import com.cqut.market.view.MainView;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import okhttp3.Call;
@@ -30,12 +27,14 @@ public class MainPresenter extends BasePresenter<MainView> {
         model.requestGoodsData(new MainModel.LoadGoodsListener() {
             @Override
             public void onSuccess(ArrayList<Good> goods) {
-                getView().onGoodsResponse(goods);
+                if (getView() != null)
+                    getView().onGoodsResponse(goods);
             }
 
             @Override
             public void onFailed(Exception e) {
-                getView().onGoodLoadFailed(e);
+                if (getView() != null)
+                    getView().onGoodLoadFailed(e);
             }
         });
     }
@@ -53,7 +52,8 @@ public class MainPresenter extends BasePresenter<MainView> {
             }
         });
     }
-    public void getOrderCounts(MainView mainView){
+
+    public void getOrderCounts(MainView mainView) {
         model.getOrderCounts(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -62,17 +62,18 @@ public class MainPresenter extends BasePresenter<MainView> {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String jsonstr=response.body().string();
-                if (jsonstr!=null) {
+                String jsonstr = response.body().string();
+                if (jsonstr != null) {
                     int counts = JsonUtil.parseOrderCounts(jsonstr);
                     mainView.getGetOrderCounts(counts);
-                }else {
+                } else {
                     mainView.getGetOrderCounts(-1);
                 }
             }
         });
     }
-    public  String generateOrderCode(int counts) {
+
+    public String generateOrderCode(int counts) {
         String last = "";
         Random rand = new Random(counts);
         int shu1 = rand.nextInt(90) + 10;

@@ -26,7 +26,7 @@ public class MineItemPresenter extends BasePresenter<MineItemView> {
                 if (!Constant.NETWORK_INFO)
                     mineItemView.onCheckOrderFailed("连接失败");
                 else
-                    mineItemView.onCheckOrderFailed(e.getCause().toString());
+                    mineItemView.onCheckOrderFailed("抱歉，现在可能没有营业额，请您稍候再试吧");
             }
 
             @Override
@@ -59,7 +59,7 @@ public class MineItemPresenter extends BasePresenter<MineItemView> {
                 if (!Constant.NETWORK_INFO) {
                     mainView.onApplyOrders("网络不可用");
                 } else
-                    mainView.onApplyOrders(e.getMessage());
+                    mainView.onApplyOrders("抱歉，现在可能还没有营业，请稍后购买吧");
             }
 
             @Override

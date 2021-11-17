@@ -51,7 +51,11 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     public P getPresenter() {
         if (!NetWorkUtil.isNetworkAvailable(this)) {
             Constant.NETWORK_INFO = false;
-            Toast.makeText(this, "网络不可用", Toast.LENGTH_SHORT).show();
+            try {
+                Toast.makeText(this, "网络不可用", Toast.LENGTH_SHORT).show();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
         } else {
             Constant.NETWORK_INFO = true;
         }

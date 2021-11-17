@@ -18,6 +18,7 @@ import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -66,6 +67,9 @@ public class MineItemModel {
                 }
             }
         });
+    }
+    public void hasNewOrder(String userId,Callback callback){
+        NetWorkUtil.sendRequestAddParms(orderUrl,"userIdForNewOrder",userId,callback);
     }
 
     public void getOrders(String userId, okhttp3.Callback callback) {
@@ -137,7 +141,7 @@ public class MineItemModel {
         NetWorkUtil.sendRequestAddParms(url, "deleteAccountId", id, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                mineItemView.onDeleteAccount(e.getMessage() + "注销失败");
+                mineItemView.onDeleteAccount("注销失败了，如果网络没问题，那就是我在偷懒。");
             }
 
             @Override
@@ -146,7 +150,7 @@ public class MineItemModel {
                 String code = JsonUtil.getResponseCode(jsonstr);
                 if (code != null && code.equals(Constant.DELETE_ACCOUNT_SUCESS))
                     mineItemView.onDeleteAccount("注销成功");
-                else mineItemView.onDeleteAccount("注销失败");
+                else mineItemView.onDeleteAccount("不知道为什么注销失败了，或许你应该再给我一次机会。");
             }
         });
     }
@@ -177,22 +181,22 @@ public class MineItemModel {
     public void upLoadMessage(String message, MineItemView mineItemView) {
         NetWorkUtil.sendRequestAddParms(problemUrl, "message", message, new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 if (!Constant.NETWORK_INFO)
                     mineItemView.onUploadFile("信息提交失败:网络不可用");
                 else
-                    mineItemView.onUploadFile("信息提交失败:" + e.getMessage());
+                    mineItemView.onUploadFile("信息提交失败:因为程序狗在偷懒。滑稽.gif");
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String json = response.body().string();
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String json = Objects.requireNonNull(response.body()).string();
                 String code = JsonUtil.getResponseCode(json);
                 if (code != null && code.equals(Constant.UPLOAD_FILE_SUCCESS))
-                    mineItemView.onUploadFile("您的反馈已经提交，感谢您的关注，我们将尽解决！");
+                    mineItemView.onUploadFile("您的反馈已经提交，感谢您的参与，我们将尽解决写bug的人");
                 else if (code != null && code.equals(Constant.UPLOAD_FILE_FAILED))
                     mineItemView.onUploadFile("提交失败:服务端");
-                else mineItemView.onUploadFile("提交失败:未知");
+                else mineItemView.onUploadFile("提交失败:第196行");
 
             }
         });
@@ -213,23 +217,23 @@ public class MineItemModel {
         OkHttpClient client = new OkHttpClient();
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 if (!Constant.NETWORK_INFO)
                     mineItemView.onUploadFile("提交失败:网络不可用");
                 else
-                    mineItemView.onUploadFile("提交失败:" + e.getMessage());
+                    mineItemView.onUploadFile("提交失败:不是美女图片一律不接受。(请在尽量在晚上间提交)");
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 file.delete();
-                String json = response.body().string();
+                String json = Objects.requireNonNull(response.body()).string();
                 String code = JsonUtil.getResponseCode(json);
                 if (code != null && code.equals(Constant.UPLOAD_FILE_SUCCESS))
                     mineItemView.onUploadFile("图片上传成功");
                 else if (code != null && code.equals(Constant.UPLOAD_FILE_FAILED))
-                    mineItemView.onUploadFile("提交失败:服务端");
-                else mineItemView.onUploadFile("提交失败:未知");
+                    mineItemView.onUploadFile("提交失败:位于服务端");
+                else mineItemView.onUploadFile("提交失败:Mine第232行");
             }
         });
 

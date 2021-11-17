@@ -313,8 +313,12 @@ public class MineFragment extends Fragment implements MineView, View.OnClickList
         Button bt_nick_apply = view.findViewById(R.id.fragment_mine_set_nickame_apply);
         EditText ed_nickname = view.findViewById(R.id.fragment_mine_set_nickame);
         bt_nick_apply.setOnClickListener(v -> {
+            if (user==null){
+                MyDialog.showToast(this.getContext(),"发生了一些错误");
+                return;
+            }
             String nick = ed_nickname.getText().toString();
-            if (nick == null || nick.equals("")) {
+            if (nick.length()==0) {
                 MyDialog.showToast(getActivity(), "内容不能为空");
                 return;
             }

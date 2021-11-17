@@ -390,12 +390,12 @@ public class MessageActivity extends BaseActivity<MessageView, MessagePresenter>
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == CALL_PHONE) {
+
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 callPhone(Constant.MY_PHONE_NUMBER);
             } else {
-                MyDialog.showToast(this, "没有权限，如果想联系我们请在 我的->About里面找到联系方式");
+                MyDialog.showToast(this, "没有权限，如果想联系我们请在 我的消息 里面找到联系方式");
             }
-
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }

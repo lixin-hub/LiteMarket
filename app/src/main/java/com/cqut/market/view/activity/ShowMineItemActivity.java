@@ -26,7 +26,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -89,9 +88,10 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
     private static final int IMAGE_PROBLEM = 2;
     private static final int RESIZE_REQUEST_CODE = 3;
     private static final int PERMISION_READIMAGE = 4;
+    private static final String TAG = ShowMineItemActivity.class.getName();
+    private final Timer timer = new Timer();
     public String userId, password;
-    int transport_fee = 2;
-    Timer timer = new Timer();
+    private int transport_fee = 1;
     private String problemMessage;
     private VPSwipeRefreshLayout vpSwipeRefreshLayout;
     private SharedPreferences sharedPreferences;
@@ -109,12 +109,13 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
     private LinearLayout receive_good_info_parent;
     private MyPop popupWindow_recive_good;
     private ImageView image_show_order_pop;
+    private RecyclerView order_recycler;
     private final TimerTask task = new TimerTask() {
         @Override
         public void run() {
             runOnUiThread(() -> {
                 if (view_dialog != null)
-                    showDialogReceiveInfo();
+                    showDialogReceiveInfo(0);
             });
 
         }
@@ -155,9 +156,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
                 break;
             case Constant.MINE_RECIVIE_GOOD_INFO:
                 setContentView(R.layout.fragment_mine_receive_goods_info);
-                ArrayList<Order> orders = new ArrayList<>();
-                orders.clear();
-                orders.addAll(Constant.orders);
+                ArrayList<Order> orders = new ArrayList<>(Constant.orders);
                 if (orders.size() == 0)
                     finish();
                 showOrdersInfo(orders);
@@ -224,7 +223,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         });
         apply.setOnClickListener(v -> {
             if (text.length() < 5) {
-                MyDialog.showToast(this, "字数有点少额，多写点嘛！");
+                MyDialog.showToast(this, "至少5个字喲");
                 return;
             }
             String path = null;
@@ -239,6 +238,8 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
             uploadProblemDialog = MyDialog.getProgressDialog(this, "正在上传中", "一会就好...");
             uploadProblemDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             uploadProblemDialog.show();
+            apply.setEnabled(false);
+            ((TextView) apply).setTextColor(Color.TRANSPARENT);
         });
 
     }
@@ -282,6 +283,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         setNickNameDialog.show();
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void showPersonalInfo() {
         View re_change_password = findViewById(R.id.fragment_mine_user_info_change_password);
         View re_delete_account = findViewById(R.id.fragment_mine_user_info_deled_account);
@@ -391,7 +393,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         bt_apply.setOnClickListener(v1 -> {
             String old = ed_old.getText().toString();
             String password = sharedPreferences.getString(Constant.PASSWORD, "-1");
-            if (!password.equals("-1") && old != null && old.equals(password)) {
+            if (!password.equals("-1") && old.equals(password)) {
                 getPresenter().deleteAccount(userId, this);
             } else {
                 MyDialog.showToast(this, "请输入正确的密码");
@@ -479,7 +481,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         });
     }
 
-    public void showDialogReceiveInfo() {
+    public void showDialogReceiveInfo(int orderSize) {
         showPopAnimator(0);
         if (image_show_order_pop != null && image_show_order_pop.getVisibility() == View.VISIBLE)
             if (popupWindow_recive_good != null && popupWindow_recive_good.isShowing()) {
@@ -490,7 +492,6 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         view_dialog.measure(w, h);
         int height = getWindow().getDecorView().getHeight();
-        int width = getWindowManager().getDefaultDisplay().getWidth();
         popupWindow_recive_good.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow_recive_good.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         popupWindow_recive_good.setOutsideTouchable(false);
@@ -500,6 +501,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         popupWindow_recive_good.setAnimationStyle(R.style.contextMenuAnim);
         popupWindow_recive_good.setOnDismissListener(() -> {
             showPopAnimator(1);//进入
+            order_recycler.smoothScrollToPosition(orderSize);
         });
 
         popupWindow_recive_good.showAsDropDown(receive_good_info_parent, 0, px2dp(-height) - receive_good_info_parent.getHeight() - 80, Gravity.NO_GRAVITY);
@@ -515,6 +517,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         return (int) (dpValue * density + 0.5f);
     }
 
+    @SuppressLint({"SetTextI18n", "InflateParams"})
     private void showOrdersInfo(ArrayList<Order> orders) {
         view_dialog = LayoutInflater.from(this).inflate(R.layout.dialog_recieve_good_info, null);
         EditText ed_beizhu, ed_addr, ed_phone_number;
@@ -544,7 +547,7 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         isFetchAddr.setOnClickListener(Util::clickAnimator);
         ApplyOrderListAdapter applyOrderListAdapter = new ApplyOrderListAdapter(this, orders);
         image_show_order_pop.setOnClickListener(v -> {
-            showDialogReceiveInfo();
+            showDialogReceiveInfo(orders.size());
         });
         image_back.setOnClickListener(v -> finish());
         checkBox_1.setOnClickListener(v -> {
@@ -573,35 +576,29 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         });
 
         bt_order_apply.setOnClickListener(v -> {
+            order_recycler.smoothScrollToPosition(orders.size());
             Util.clickAnimator(v);
             if (popupWindow_recive_good != null)
                 popupWindow_recive_good.close();
             String addr = ed_addr.getText().toString();
             String beizhu = ed_beizhu.getText().toString();
             String phone = ed_phone_number.getText().toString();
-            if (addr != null && !addr.equals("") && phone != null && LoginModel.isMobileNumber(phone)) {
+            if (!addr.equals("") && LoginModel.isMobileNumber(phone)) {
                 AlertDialog.Builder builder = MyDialog.getDialog(this, "提交订单", "请您确认以下信息：\n" +
                         "备注:" + beizhu + "\n" + "电话:" + phone + "\n" + "地址:" + addr + "\n" + "总费用:" + (calculateMoney(orders) + transport_fee));
                 builder.setCancelable(false);
                 builder.setIcon(R.drawable.order);
                 builder.setPositiveButton("确认", (dialog, which) -> {
-
-                    if (!addr.equals("") && !phone.equals("")) {
+                    if (!phone.equals("")) {
                         editor.putString(Constant.PHONE_NUMBER, phone);
                         editor.putString(Constant.ADDR, addr);
                         editor.apply();
                         long time = System.currentTimeMillis();
+                        for (ApplyOrderListAdapter.ViewHolder holder : applyOrderListAdapter.holders) {
+                            System.out.println(holder.edit_beizhu.getText());
+                        }
                         for (Order o : orders) {
-                            for (ApplyOrderListAdapter.ViewHolder holder : applyOrderListAdapter.holders) {
-                                if (holder.goodId.equals(o.getGood().getId())) {
-                                    String bz = holder.edit_beizhu.getText().toString();
-                                    if (bz != null && bz.length() > 0)
-                                        o.setBeizhu("单独备注:" + bz + "\n" + "备注:" + beizhu + "\n" + "电话:" + phone + "\n" + "地址:" + addr + "\n" + "总费用:" + (calculateMoney(orders) + transport_fee));
-                                    else
-                                        o.setBeizhu("备注:" + beizhu + "\n" + "电话:" + phone + "\n" + "地址:" + addr + "\n" + "总费用:" + (calculateMoney(orders) + transport_fee));
-                                    break;
-                                }
-                            }
+                            o.setBeizhu("备注:" + beizhu + "\n" + "电话:" + phone + "\n" + "地址:" + addr + "\n" + "总费用:" + (calculateMoney(orders) + transport_fee));
                             o.setOrderTime(time);
                             o.setTransport_fee(transport_fee);
                         }
@@ -616,11 +613,12 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
                         }
                         ShowMineItemActivity.this.getPresenter().applyOrders(orders, ShowMineItemActivity.this);
                     } else {
-                        MyDialog.showToast(ShowMineItemActivity.this, "电话号码和地址是必需要填的喲！");
+                        MyDialog.showToast(ShowMineItemActivity.this, "请先填写电话号码和地址，以便我们能找到并联系你");
+                        showDialogReceiveInfo(orders.size());
                     }
                 });
                 builder.setNegativeButton("取消", (dialog, which) -> {
-                    showDialogReceiveInfo();
+                    showDialogReceiveInfo(orders.size());
                     dialog.dismiss();
                     bt_order_apply.setEnabled(true);
                 });
@@ -628,23 +626,26 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
                 mdialog.show();
             } else {
                 MyDialog.showToast(ShowMineItemActivity.this, "电话号码和地址是必需要填正确的喲！");
+                showDialogReceiveInfo(orders.size());
             }
         });
         text_price.setText("配送费:" + transport_fee + "\nRMB:" + (calculateMoney(orders) + transport_fee));
-        RecyclerView recyclerView = findViewById(R.id.fragment_mine_receive_goods_info_recycler_view);
+        order_recycler = findViewById(R.id.fragment_mine_receive_goods_info_recycler_view);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(applyOrderListAdapter);
-        applyOrderListAdapter.notifyDataSetChanged();
+        order_recycler.setLayoutManager(manager);
+        order_recycler.setAdapter(applyOrderListAdapter);
+//        applyOrderListAdapter.notifyDataSetChanged();
     }
 
 
     private float calculateMoney(ArrayList<Order> orders) {
         float money = 0;
         for (Order order : orders) {
-            int count = order.getCount();
-            money += count * order.getGood().getPrice();
+            if (order.getGood() != null) {
+                int count = order.getCount();
+                money += count * order.getGood().getPrice();
+            }
         }
         BigDecimal bg = new BigDecimal(money).setScale(2, RoundingMode.HALF_UP);
         return bg.floatValue();
@@ -669,6 +670,9 @@ public class ShowMineItemActivity extends BaseActivity<MineItemView, MineItemPre
         ArrayList<Order> orders_completed = new ArrayList<>();
         if (orders != null)
             for (Order order : orders) {
+                if (order == null) {
+                    return;
+                }
                 switch (order.getState()) {
                     case STATE_APPLY:
                         orders_apply.add(order);

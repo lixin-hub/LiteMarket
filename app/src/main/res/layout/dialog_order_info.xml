@@ -99,6 +99,7 @@
                 android:visibility="gone"
                 android:layout_marginStart="20dp"
                 android:textSize="15dp"
+                android:layout_marginEnd="10dp"
                 android:textColor="@color/black"
                 android:gravity="center"
                 android:text="清空"

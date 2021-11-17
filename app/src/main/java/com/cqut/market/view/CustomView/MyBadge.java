@@ -15,7 +15,7 @@ public class MyBadge extends View {
     private final int backgroundColor = Color.RED;
     private Paint textPaint;
     private Paint backgroundPaint;
-    private String number="";
+    private String number = "";
     private int textColor = Color.WHITE;
     private float x, y;
     private int radius;
@@ -44,7 +44,7 @@ public class MyBadge extends View {
 
     public void setNumber(String number) {
         this.number = number;
-        if (number==null)
+        if (number == null)
             this.setVisibility(View.GONE);
         else {
             this.setVisibility(View.VISIBLE);
@@ -72,14 +72,14 @@ public class MyBadge extends View {
         textPaint.setColor(textColor);
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setTextSize(30);
-        int textHeight = getTextHeight(number , textPaint);
-        int textWidth = getTextWidth(number , textPaint);
+        int textHeight =25;//getTextHeight(number, textPaint);
+        int textWidth = getTextWidth(number, textPaint);
         width = textWidth + 30;
         height = textHeight + 30;
         x = width / 2 - textWidth / 2;
         y = height / 2 + textHeight / 2;
         radius = width / 2;
-        setMeasuredDimension(width,height);
+        setMeasuredDimension(width, height);
     }
 
     private int getTextHeight(String text, Paint paint) {
@@ -98,6 +98,6 @@ public class MyBadge extends View {
     protected void onDraw(Canvas canvas) {
         canvas.drawColor(Color.TRANSPARENT);
         canvas.drawCircle(width / 2, height / 2, radius, backgroundPaint);
-        canvas.drawText(number + "", x, y, textPaint);
+        canvas.drawText(number + "", x-4, y, textPaint);
     }
 }

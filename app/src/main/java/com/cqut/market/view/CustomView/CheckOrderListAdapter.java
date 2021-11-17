@@ -131,6 +131,7 @@ public class CheckOrderListAdapter extends RecyclerView.Adapter<CheckOrderListAd
                 String message = "取消原因:\n"+info + "\n" + info1;
                 MineItemModel.cancelOrder(order, message, holder, CheckOrderListAdapter.this);
                 dialog.dismiss();
+                holder.bt_cancel_order.setEnabled(false);
             });
             bt_think.setOnClickListener(v1 -> dialog.dismiss());
             dialog.show();
@@ -149,6 +150,7 @@ public class CheckOrderListAdapter extends RecyclerView.Adapter<CheckOrderListAd
                 MyDialog.showToast(context, "取消订单成功！");
                 ((ShowMineItemActivity) context).getPresenter().getOrderList(((ShowMineItemActivity) context).userId, ((ShowMineItemActivity) context));
             } else {
+                holder.bt_cancel_order.setEnabled(true);
                 AlertDialog.Builder builder = MyDialog.getDialog(context, "取消订单", "取消失败,请联系客服");
                 builder.setCancelable(true);
                 builder.create().show();

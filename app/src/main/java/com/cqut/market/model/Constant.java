@@ -12,7 +12,7 @@ import okhttp3.Response;
 public class Constant {
     public static final String HOST_LOCAL = "http://192.168.43.245:8088/LiteMarket/";
     public static final String HOST_INTERNET = "https://3j4m729509.goho.co/LiteMarket/";
-    public static final String HOST = HOST_LOCAL;
+    public static final String HOST = HOST_INTERNET;
     public static final String QQ_KEY = "QcaiDn5ut1HzdJKL-A9UJR0EhZ__5_EN";
     public static final String QQ_URL = "mqqwpa://im/chat?chat_type=wpa&uin=763819849&version=1";
     public static final String IS_USER_LOADED = "isLoaded";//是否加载了用户信息

@@ -57,7 +57,9 @@ import com.cqut.market.beans.Order;
 import com.cqut.market.model.Constant;
 import com.cqut.market.model.FileUtil;
 import com.cqut.market.model.GoodCategory;
+import com.cqut.market.model.JsonUtil;
 import com.cqut.market.model.MessageModel;
+import com.cqut.market.model.MineItemModel;
 import com.cqut.market.model.NetWorkUtil;
 import com.cqut.market.model.OrderState;
 import com.cqut.market.model.Util;
@@ -66,6 +68,7 @@ import com.cqut.market.view.CustomView.FragmentStateAdapter;
 import com.cqut.market.view.CustomView.GoodListAdapter;
 import com.cqut.market.view.CustomView.Image3DSwitchView;
 import com.cqut.market.view.CustomView.Image3DView;
+import com.cqut.market.view.CustomView.MyBadge;
 import com.cqut.market.view.CustomView.MyDialog;
 import com.cqut.market.view.CustomView.OrderListAdapter;
 import com.cqut.market.view.MainView;
@@ -74,6 +77,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -93,32 +97,32 @@ import static com.ashokvarma.bottomnavigation.BottomNavigationBar.MODE_FIXED;
 import static com.cqut.market.model.Util.clickAnimator;
 
 public class MainActivity extends BaseActivity<MainView, MainPresenter> implements MainView, View.OnFocusChangeListener, BottomNavigationBar.OnTabSelectedListener, TextWatcher, SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
-//    private static final String TAG = "MainActivity" + "DEBUGE";
+        private static final String TAG = "MainActivity" + "DEBUGE";
     private final ArrayList<Image3DView> images = new ArrayList<>();
     private final ArrayList<Order> orders = new ArrayList<>();
     private final ArrayList<Fragment> fragments = new ArrayList<>();
+    private final ArrayList<String> strings = new ArrayList<>();
+    private final ArrayList<Good> quanbu = new ArrayList<>();
+    private final ArrayList<Good> lingshi = new ArrayList<>();
+    private final ArrayList<Good> zhaichan = new ArrayList<>();
+    private final ArrayList<Good> riyong = new ArrayList<>();
+    private final ArrayList<Good> kuaidi = new ArrayList<>();
+    private final ArrayList<Good> jiuying = new ArrayList<>();
+    private final ArrayList<Good> shushi = new ArrayList<>();
+    private final CategoryFragment lingshiF = new CategoryFragment(lingshi);
+    private final CategoryFragment kuaidiF = new CategoryFragment(kuaidi);
+    private final CategoryFragment zhaichanF = new CategoryFragment(zhaichan);
+    private final CategoryFragment shushiF = new CategoryFragment(shushi);
+    private final CategoryFragment riyongF = new CategoryFragment(riyong);
+    private final CategoryFragment jiuyingF = new CategoryFragment(jiuying);
+    private final CategoryFragment quanbuF = new CategoryFragment(quanbu);
     public SharedPreferences sharedPreferences;
     public SharedPreferences.Editor editor;
-    ArrayList<String> strings = new ArrayList<>();
-    ArrayList<Good> currentGoods;
-    ArrayList<Good> quanbu = new ArrayList<>();
-    ArrayList<Good> lingshi = new ArrayList<>();
-    ArrayList<Good> zhaichan = new ArrayList<>();
-    ArrayList<Good> riyong = new ArrayList<>();
-    ArrayList<Good> kuaidi = new ArrayList<>();
-    ArrayList<Good> jiuying = new ArrayList<>();
-    ArrayList<Good> shushi = new ArrayList<>();
-    CategoryFragment lingshiF = new CategoryFragment(lingshi);
-    CategoryFragment kuaidiF = new CategoryFragment(kuaidi);
-    CategoryFragment zhaichanF = new CategoryFragment(zhaichan);
-    CategoryFragment shushiF = new CategoryFragment(shushi);
-    CategoryFragment riyongF = new CategoryFragment(riyong);
-    CategoryFragment jiuyingF = new CategoryFragment(jiuying);
-    CategoryFragment quanbuF = new CategoryFragment(quanbu);
+    private ArrayList<Good> currentGoods;
     private ArrayList<Good> allGoods = new ArrayList<>();
-
     private ArrayList<String> orderedList;//加入购物车的商品
     private TextView text_total_money;
+    private MyBadge myBadge;
     private FloatingActionButton bt_order_info;
     private Image3DSwitchView image3DSwitchView;
     private final TimerTask headerImageTask = new TimerTask() {
@@ -150,6 +154,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     private FragmentStateAdapter goodsAdapter;
     private TabLayoutMediator tabLayoutMediator;
     private AlertDialog dialog_check_stock;
+    private View bt_mine_order;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -182,6 +187,9 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         images.add(findViewById(R.id.activity_main_head_3dswitch_3));
         images.add(findViewById(R.id.activity_main_head_3dswitch_4));
         images.add(findViewById(R.id.activity_main_head_3dswitch_5));
+        bt_mine_order = findViewById(R.id.main_activity_mine_order_view);
+        myBadge = findViewById(R.id.my_badge_order);
+        findViewById(R.id.bt_mine_order).setOnClickListener(v -> onMineOrderClicked());
         ed_search_box = findViewById(R.id.main_search);
         ed_search_box.addTextChangedListener(this);
         ed_search_box.setOnFocusChangeListener(this);
@@ -195,11 +203,13 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         editor.apply();
         for (Image3DView v : images) {
             v.setOnClickListener(v1 -> {
-                String id = (String) v.getTag();
-                Intent intent = new Intent(this, OrderActivity.class);
-                intent.putExtra("id", "" + id);
-                intent.putExtra("isSlected", (orderedList.contains(id)));
-                startActivityForResult(intent, Constant.REQUESTCODE_ORDER);
+                if (allGoods != null && allGoods.size() != 0) {
+                    String id = (String) v.getTag();
+                    Intent intent = new Intent(this, OrderActivity.class);
+                    intent.putExtra("id", "" + id);
+                    intent.putExtra("isSlected", (orderedList.contains(id)));
+                    startActivityForResult(intent, Constant.REQUESTCODE_ORDER);
+                }
             });
         }
         BottomNavigationBar bottomNavigationBar = findViewById(R.id.bottomNavigationBar);
@@ -275,7 +285,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
             }
         });
         String data = FileUtil.getData("uncaughtException.txt");
-        if (data != null && data.length() > 0) {
+        if (data != null && data.length() > 0 && NetWorkUtil.isNetworkAvailable(this)) {
             NetWorkUtil.sendRequestAddParms(Constant.HOST + "problem", "uncaughtException", data, new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -285,12 +295,20 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) {
                     FileUtil.clearException();
+                    runOnUiThread(() -> MyDialog.showToast(MainActivity.this, "检测到程序发生过错误，正在上传错误信息:" + data));
                 }
             });
         }
 
 
     }
+
+    private void onMineOrderClicked() {
+        Intent intent = new Intent(MainActivity.this, ShowMineItemActivity.class);
+        intent.putExtra("item", Constant.MINE_ORDER);
+        startActivity(intent);
+    }
+
 
     private void initCategory(ArrayList<Good> goods) {
         fragments.clear();
@@ -303,28 +321,29 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
         quanbu.clear();
         quanbu.addAll(goods);
         for (Good good : goods) {
-            switch (Integer.parseInt(good.getCategory())) {
-                case GoodCategory.lingshi:
-                    lingshi.add(good);
-                    break;
-                case GoodCategory.kuaidi:
-                    kuaidi.add(good);
-                    break;
-                case GoodCategory.zhaochan:
-                    zhaichan.add(good);
-                    break;
-                case GoodCategory.shushi:
-                    shushi.add(good);
-                    break;
-                case GoodCategory.riyong:
-                    riyong.add(good);
-                    break;
-                case GoodCategory.jiuying:
-                    jiuying.add(good);
-                    break;
-                default:
-                    break;
-            }
+            if (good != null)
+                switch (Integer.parseInt(good.getCategory())) {
+                    case GoodCategory.lingshi:
+                        lingshi.add(good);
+                        break;
+                    case GoodCategory.kuaidi:
+                        kuaidi.add(good);
+                        break;
+                    case GoodCategory.zhaochan:
+                        zhaichan.add(good);
+                        break;
+                    case GoodCategory.shushi:
+                        shushi.add(good);
+                        break;
+                    case GoodCategory.riyong:
+                        riyong.add(good);
+                        break;
+                    case GoodCategory.jiuying:
+                        jiuying.add(good);
+                        break;
+                    default:
+                        break;
+                }
         }
 
         fragments.add(quanbuF);
@@ -471,8 +490,8 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
             }
         } else {
             if (NetWorkUtil.isNetworkAvailable(this)) {
-                MyDialog.showToast(MainActivity.this, "无法提交订单,服务器可能关闭了，稍候再下单吧！");
-            } else MyDialog.showToast(MainActivity.this, "检查网络");
+                MyDialog.showToastLong(MainActivity.this, "现在无法提交订单，可能是跑腿小弟还没有准备好，稍候再下单吧！");
+            } else MyDialog.showToast(MainActivity.this, "请检查网络");
         }
     }
 
@@ -540,19 +559,23 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     @Override
     public void onRefresh() {
         getPresenter().requestGoodsData();
+        hasNewOrder();
+        hasNewMessage();
     }
 
     private float calculateMoney(ArrayList<Order> orders) {
         float money = 0;
         for (Order order : orders) {
-            int count = order.getCount();
-            money += count * order.getGood().getPrice();
+            if (order.getGood() != null) {
+                int count = order.getCount();
+                money += count * order.getGood().getPrice();
+            }
         }
         BigDecimal bg = new BigDecimal(money).setScale(2, RoundingMode.HALF_UP);
         return bg.floatValue();
     }
 
-    @SuppressLint({"NonConstantResourceId", "SetTextI18n"})
+    @SuppressLint({"NonConstantResourceId", "SetTextI18n", "NotifyDataSetChanged"})
     @Override
     public void onClick(View v) {
         GoodListAdapter.ViewHolder goodHolder;
@@ -699,13 +722,47 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
 
     @Override
     protected void onStart() {
-        hasNewMessage();
+
         super.onStart();
+    }
+
+    private void hasNewOrder() {
+        new MineItemModel().hasNewOrder(userId, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String string = response.body().string();
+                String responseCode = JsonUtil.getResponseCode(string);
+                Document parse;
+                if (responseCode != null)
+                    parse = Document.parse(string);
+                else parse = new Document("counts", 0);
+                if (parse != null) {
+                    Integer counts = parse.getInteger("counts");
+                    int width = bt_mine_order.getWidth();
+                    int width1 = getWindow().getDecorView().getWidth();
+                    if (counts > 0) {
+                        runOnUiThread(() -> {
+                            Util.transAnim(bt_mine_order, "translationX", width, 0);
+                            myBadge.setNumber(counts + "");
+                            myBadge.setVisibility(View.VISIBLE);
+                        });
+                    } else {
+                        if (bt_mine_order.getX() <= width1 - width + 10)
+                            runOnUiThread(() -> Util.transAnim(bt_mine_order, "translationX", 0, width));
+                    }
+                }
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         hasNewMessage();
+        hasNewOrder();
         super.onResume();
     }
 
@@ -1020,10 +1077,11 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         for (Good good : allGoods) {
-            if (good.getDescription().contains(s) || good.getName().contains(s)) {
-                int i = allGoods.indexOf(good);
-                ((CategoryFragment) fragments.get(tableIndex)).smoothScrollToPosition(i);
-            }
+            if (good != null)
+                if (good.getDescription().contains(s) || good.getName().contains(s)) {
+                    int i = allGoods.indexOf(good);
+                    ((CategoryFragment) fragments.get(tableIndex)).smoothScrollToPosition(i);
+                }
         }
     }
 
@@ -1035,6 +1093,7 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
 
     static class BottomOffsetDecoration extends RecyclerView.ItemDecoration {
         private final int mBottomOffset;
+
         public BottomOffsetDecoration(int bottomOffset) {
             mBottomOffset = bottomOffset;
         }
@@ -1044,16 +1103,17 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
             super.getItemOffsets(outRect, view, parent, state);
             int dataSize = state.getItemCount();
             int position = parent.getChildAdapterPosition(view);
+            if (position == -1)
+                return;
             StaggeredGridLayoutManager gard = (StaggeredGridLayoutManager) parent.getLayoutManager();
-            assert gard != null;
-            if ((dataSize - position) <= gard.getSpanCount()) {
-                int height = gard.getBottomDecorationHeight(view);
-                if (mBottomOffset > height)
-                    outRect.set(0, 0, 0, mBottomOffset);
-            } else {
-                outRect.set(0, 0, 0, 0);
-            }
-
+            if (gard != null)
+                if ((dataSize - position) <= gard.getSpanCount()) {
+                    int height = gard.getBottomDecorationHeight(view);
+                    if (mBottomOffset > height)
+                        outRect.set(0, 0, 0, mBottomOffset);
+                } else {
+                    outRect.set(0, 0, 0, 0);
+                }
         }
     }
 }

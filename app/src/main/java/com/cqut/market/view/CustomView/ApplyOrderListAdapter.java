@@ -1,5 +1,6 @@
 package com.cqut.market.view.CustomView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,13 +24,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ApplyOrderListAdapter extends RecyclerView.Adapter<ApplyOrderListAdapter.ViewHolder> {
 
     private final Context context;
     private final ArrayList<Order> orders = new ArrayList<>();
-    public List<ViewHolder> holders = new ArrayList<>();
+    public Set<ViewHolder> holders = new HashSet<>();
 
     public ApplyOrderListAdapter(Context context, ArrayList<Order> orders) {
         this.context = context;
@@ -45,16 +47,23 @@ public class ApplyOrderListAdapter extends RecyclerView.Adapter<ApplyOrderListAd
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         Order order = orders.get(position);
-        if (order == null) return;
-        holder.goodId=order.getGood().getId();
+        if (order == null || order.getGood() == null) return;
+        if (holders.contains(holder)) {
+
+            return;
+        }
+        holder.edit_beizhu.setVisibility(View.VISIBLE);
+        holder.goodId = order.getGood().getId();
+        holder.edit_beizhu.setText("");
         holders.add(holder);
+        System.out.println(holder.goodId);
         Good good = order.getGood();
         Date date = new Date(order.getOrderTime());
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         holder.text_time.setText(dateformat.format(date));
         holder.text_ordercode.setText(order.getOrderCode());
         holder.text_Order_count.setText("x" + order.getCount());
@@ -76,15 +85,15 @@ public class ApplyOrderListAdapter extends RecyclerView.Adapter<ApplyOrderListAd
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView text_name;//货物名字
+        private final TextView text_price;//及格
+        private final TextView text_transport_price;//配送fee
+        private final TextView text_Order_count;//数量
+        private final TextView text_time;//时间
+        private final TextView text_ordercode;//订单号
         public String goodId;
         public EditText edit_beizhu;
-        TextView text_name//货物名字
-                , text_price//及格
-                , text_transport_price//配送fee
-                , text_Order_count//数量
-                , text_time//时间
-                , text_ordercode;//订单号
-        ImageView image;//图片
+        private ImageView image;//图片
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -96,7 +105,6 @@ public class ApplyOrderListAdapter extends RecyclerView.Adapter<ApplyOrderListAd
             text_time = itemView.findViewById(R.id.fragment_mine_order_list_item_time);
             text_Order_count = itemView.findViewById(R.id.fragment_mine_order_list_item_count);
             edit_beizhu = itemView.findViewById(R.id.fragment_mine_order_list_item_beizhu_input);
-            edit_beizhu.setVisibility(View.VISIBLE);
         }
     }
 }

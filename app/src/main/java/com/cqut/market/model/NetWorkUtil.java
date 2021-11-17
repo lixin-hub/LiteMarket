@@ -13,14 +13,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
-import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -35,13 +32,17 @@ public class NetWorkUtil {
     private static final String LINE_END = "\r\n";                        //换行
 
     public static void sendRequest(String address, okhttp3.Callback callback) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(6, TimeUnit.SECONDS)
+                .build();
         Request request = new okhttp3.Request.Builder().url(address).build();
         client.newCall(request).enqueue(callback);
     }
 
     public static void sendRequestAddParms(String address, String key, String value, okhttp3.Callback callback) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(6, TimeUnit.SECONDS)
+                .build();
         RequestBody body = new FormBody.Builder()
                 .add(key, value)
                 .build();
@@ -50,13 +51,16 @@ public class NetWorkUtil {
     }
 
     public static void sendRequestAddParms(String address, HashMap<String, String> params, okhttp3.Callback callback) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(6, TimeUnit.SECONDS)
+                .build();
         FormBody.Builder builder = new FormBody.Builder();
         for (String key : params.keySet()) {
             builder.add(key, params.get(key));
         }
         RequestBody body = builder.build();
-        Request request = new okhttp3.Request.Builder().url(address).post(body).build();
+        Request request = new okhttp3.Request.Builder()
+                .url(address).post(body).build();
         client.newCall(request).enqueue(callback);
     }
 

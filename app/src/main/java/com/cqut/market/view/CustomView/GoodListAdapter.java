@@ -46,6 +46,8 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Good good = goods.get(position);
+        if (good==null)
+            return;
         this.holder=holder;
         holder.id=good.getId();
         allHolders.add(holder);

@@ -52,7 +52,6 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
     }
 
     public void notifyData() {
-        Log.e("Fragment", "notifyData: "+allGoods.hashCode() );
         if (goodListAdapter != null)
             goodListAdapter.notifyItemRangeChanged(0, allGoods.size());
     }

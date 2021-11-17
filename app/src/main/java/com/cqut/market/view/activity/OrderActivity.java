@@ -298,6 +298,8 @@ public class OrderActivity extends BaseActivity<OrderView, OrderPresenter> imple
     public void onGetGoodSuccess(Good good) {
         runOnUiThread(() -> {
             if (dialog != null) dialog.dismiss();
+            if (good==null)
+                return;
             order_description.setText(good.getDescription());
             SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             order_description_time.setText("上架时间:" + dateformat.format(new Date(good.getAddTime())));

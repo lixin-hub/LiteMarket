@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -31,7 +32,7 @@ public class MessageModel {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String jsonStr = response.body().string();
+                String jsonStr = Objects.requireNonNull(response.body()).string();
                 Document document = null;
 
                 if (jsonStr == null) {
@@ -101,7 +102,7 @@ public class MessageModel {
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 if (!Constant.NETWORK_INFO)
                     messageView.onSendMessageResult("网络不可用");
-                else messageView.onSendMessageResult(Constant.SEND_MESSAGE_FAILED);
+                else messageView.onSendMessageResult("小弟没来上班，啥也做不了啊");
             }
 
             @Override
@@ -110,7 +111,7 @@ public class MessageModel {
                 String responseCode = JsonUtil.getResponseCode(jsonStr);
                 if (responseCode != null && responseCode.equals(Constant.SEND_MESSAGE_SUCCESS))
                     messageView.onSendMessageResult(Constant.SEND_MESSAGE_SUCCESS);
-                else messageView.onSendMessageResult(Constant.SEND_MESSAGE_FAILED);
+                else messageView.onSendMessageResult("what?鬼知道发生了什么");
             }
         });
     }
@@ -119,7 +120,7 @@ public class MessageModel {
         NetWorkUtil.sendRequestAddParms(url, "clearMessage", messageId, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                messageView.onClear("失败" + e.getCause());
+                messageView.onClear("哎呀，好像没能成功。");
             }
 
             @Override
@@ -127,9 +128,9 @@ public class MessageModel {
                 String string = response.body().string();
                 String responseCode = JsonUtil.getResponseCode(string);
                 if (responseCode != null && responseCode.equals(Constant.CLEAR_MESSAGE_SUCCESS))
-                    messageView.onClear("删除成功");
+                    messageView.onClear("成功了");
                 else
-                    messageView.onClear("失败");
+                    messageView.onClear("发生甚么事了，竟然失败了");
             }
         });
     }
@@ -137,7 +138,7 @@ public class MessageModel {
         NetWorkUtil.sendRequestAddParms(url, "clearAllMessage", userId, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                messageView.onClear("失败" + e.getCause());
+                messageView.onClear("失败...是成功他妈. 狗头.jpg");
             }
 
             @Override
@@ -147,7 +148,7 @@ public class MessageModel {
                 if (responseCode != null && responseCode.equals(Constant.CLEAR_MESSAGE_SUCCESS))
                     messageView.onClear("消息删除成功");
                 else
-                    messageView.onClear("失败");
+                    messageView.onClear("oh no！没成功。");
             }
         });
     }
